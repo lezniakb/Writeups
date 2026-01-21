@@ -2,7 +2,7 @@
 ### An Apache Tomcat vulnerability
 
 Link to the tryhackme room:
-https://tryhackme.com/room/tomghost
+[https://tryhackme.com/room/tomghost](https://tryhackme.com/room/tomghost)
 
 Vulnerable Machine IP: 10.81.170.211<br>
 Attack Machine IP: 192.168.136.34
