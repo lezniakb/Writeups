@@ -4,6 +4,8 @@
 Link to the tryhackme room:
 [https://tryhackme.com/room/tomghost](https://tryhackme.com/room/tomghost)
 
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 Vulnerable Machine IP: 10.81.170.211<br>
 Attack Machine IP: 192.168.136.34
 
@@ -205,6 +207,7 @@ root.txt  ufw
 THM{Z1P_1S_FAKE}
 # 
 ```
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 Finished! 
 That concludes this challenge. Thanks for reading and see you in the next one!
 
