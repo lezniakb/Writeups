@@ -5,6 +5,8 @@ _"Fine, but in protest, I’m walking over there extremely slowly!"_
 Link to the tryhackme room:
 [https://tryhackme.com/room/brooklynninenine](https://tryhackme.com/room/brooklynninenine)
 
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 Target machine IP: 10.81.135.127<br>
 Attack machine IP: 192.168.136.34
 
@@ -155,7 +157,7 @@ Enjoy!!
 # 
 ```
 >In more difficult CTFs I would use `find` command. By default the flag is located directly in `/root` directory
-
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 Second flag found, root.txt: `63a9f0ea7bb98050796b649e85481845`
 
 Finished!
@@ -169,4 +171,5 @@ https://en.wikipedia.org/wiki/File_Transfer_Protocol<br>
 https://en.wikipedia.org/wiki/List_of_FTP_commands<br>
 https://www.kali.org/tools/hydra/<br>
 https://gtfobins.org/gtfobins/less/
+
 
