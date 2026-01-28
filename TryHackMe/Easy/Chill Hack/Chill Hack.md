@@ -1,8 +1,10 @@
 # Chill Hack
-### 
+### Just chillin'
 
 Target machine IP: 10.80.129.48<br>
 Attack machine IP: 192.168.136.34
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 Like always, contents of snippets is cut down for brevity. Shown content is not modified.
 
@@ -363,7 +365,7 @@ Now, who are we?
 root
 ```
 >Rest in peace, Chill Hack CTF.
-
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 Final flag is in /root/proof.txt file: 
 `{ROOT-FLAG: w18gfpn9xehsgd3tovhk0hby4gdp89bg}`
 
