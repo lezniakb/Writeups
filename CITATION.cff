@@ -1,0 +1,8 @@
+cff-version: 1.0.0
+message: "If you use these writeups, please cite them as below."
+authors:
+  - family-names: "Łężniak"
+    given-names: "Bartosz"
+title: "Writeups"
+date-released: 2026-01-28
+url: "https://github.com/lezniakb/Writeups"
