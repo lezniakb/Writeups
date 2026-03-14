@@ -365,8 +365,10 @@ Now, who are we?
 root
 ```
 >Rest in peace, Chill Hack CTF.
+
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
-Final flag is in /root/proof.txt file: 
+
+Final flag is in /root/proof.txt file:<br>
 `{ROOT-FLAG: w18gfpn9xehsgd3tovhk0hby4gdp89bg}`
 
 ### Thank you for reading!
