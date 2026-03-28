@@ -10,11 +10,11 @@ Link to the tryhackme room: [https://tryhackme.com/room/mrphisher](https://tryha
 ### Where do we begin
 When we boot up the virtual machine, we are greeted with a `.docm` sample. It's a word document extension and it contains a **macro**. Let's open it up with LibreOffice Writer.
 
-<img width="604" height="262" alt="pho1" src="https://github.com/user-attachments/assets/48e41ae6-b354-4182-b000-5f6323edd9e6" />
+<img width="600" height="262" alt="pho1" src="https://github.com/user-attachments/assets/48e41ae6-b354-4182-b000-5f6323edd9e6" />
 
 The machine is slow. After a while you should see this:
 
-<img width="803" height="248" alt="pho2" src="https://github.com/user-attachments/assets/fd69f69d-e8b6-4986-995b-4e87592f48a5" />
+<img width="600" height="248" alt="pho2" src="https://github.com/user-attachments/assets/fd69f69d-e8b6-4986-995b-4e87592f48a5" />
 
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
@@ -75,7 +75,7 @@ Final flag: `flag{a39a07a239aacd40c948d852a5c9f8d1}`
 ### Conclusion
 Thanks for reading this quick writeup. 
 
-Funfact: This room took me exactly 7 minutes and 20 seconds to complete. And I had no prior experience with LibreOffice Writer ;)
+**Funfact**: This room took me exactly 7 minutes and 20 seconds to complete. And I had no prior experience with LibreOffice Writer ;)
 
 ### Sources
 - [LibreOffice Writer](https://www.libreoffice.org/discover/writer/)
