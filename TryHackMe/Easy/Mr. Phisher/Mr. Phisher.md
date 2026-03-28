@@ -2,6 +2,8 @@
 ### Phishing for fishes
 Click here for infinite money!
 
+<img width="57" height="512" alt="10399832" src="https://github.com/user-attachments/assets/a729e7ed-408b-4d87-81ed-c67b873cda3b" />
+
 ---
 
 ### General Information
