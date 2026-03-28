@@ -2,10 +2,14 @@
 ### Phishing for fishes
 Click here for infinite money!
 
+---
+
 ### General Information
 Link to the tryhackme room: [https://tryhackme.com/room/mrphisher](https://tryhackme.com/room/mrphisher)
 
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
+---
 
 ### Where do we begin
 When we boot up the virtual machine, we are greeted with a `.docm` sample. It's a word document extension and it contains a **macro**. Let's open it up with LibreOffice Writer.
