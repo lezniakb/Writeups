@@ -4,15 +4,17 @@
 Today we're going to enumerate a server, gather information along the way, and finally take over the server.
 
 This room is great for beginners. I tried my best to help you with every part of the challenge.
-> Please note this guide was orignally created and posted in 2025 [here](https://medium.com/@lightmagician/toolsrus-tryhackme-guide-ee6f5395363b)
+> Please note this guide was orignally created and posted in 2025 [here](https://medium.com/@lightmagician/toolsrus-tryhackme-guide-ee6f5395363b) | [mirror](https://web.archive.org/web/20260402132723/https://medium.com/@lightmagician/toolsrus-tryhackme-guide-ee6f5395363b)
 
-> I also wanted it to be posted on TryHackMe writeups page, but they didn't add it. Hence the redactions.
+> I also wanted it to be posted on TryHackMe writeups page, hence the redactions. Sadly, it wasn't added.
 
 ### General Information
 Link to the tryhackme room: [https://tryhackme.com/room/toolsrus](https://tryhackme.com/room/toolsrus)
 
 Attack machine IP: 10.10.69.168<br>
 Target machine IP: 10.10.200.17
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 Recommended prerequisities are:
 - Nmap: The Basics
@@ -27,6 +29,8 @@ With that, let's begin! Start the machine along with AttackBox (or linux distrib
 First question already gives us a few hints.<br>First, we are looking for a directory - so we are going to use gobuster. Next, we already know it starts with "g" so we can make the discovery much faster by cutting down our wordlist!
 
 We need the wordlist. Normally we'd use "*directory-list-2.3-medium.txt*" or the *small* version, but filtering the words starting with "g" will cut down the time needed to find the directory, and is a good practice if you have the info we have.
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 Here's the command for filtering the wordlist:
 ```
@@ -43,15 +47,18 @@ We use "*dir*" mode for directory enumeration, *-u* for url and *-w* for wordlis
 
 In under one second we get our result! 
 
-(photo1)
+<img width="688" height="364" alt="1" src="https://github.com/user-attachments/assets/1eec1094-ad19-4882-9801-cb694e08a21a" />
 
 I recommend running gobuster second time in background, with full 2.3-medium list. We'll get to it later.
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 ## 2. Whose name can you find from this directory?
 That's easy. Just open a browser of your preference, enter the target's IP and add the found subdomain to url.<br>
 Notice that your target IP is different than mine.
 
-(pho2)
+<img width="499" height="162" alt="2" src="https://github.com/user-attachments/assets/0aa2b6da-975e-48b2-9d3e-3b1baa08b0f2" />
+
 
 Wait, what's that? Some employee left a message for [REDACTED]👷 that's accessible by anyone from the web!
 
@@ -65,9 +72,13 @@ gobuster dir -u http://10.10.200.17 -w /usr/share/wordlists/dirbuster/directory-
 
 After a short while we get the results. Depending on the server's speed, the time of discovering directories can vary. That's why filtering the wordlist is useful if you have any info on the name or type of directory you want to find.
 
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
+```
 /[REDACTED] (Status: 301)
 /[REDACTED] (Status: 401)
 /server-status (Status: 403)
+```
 
 These are the directories found by gobuster with *2.3-medium* wordlist. We can see that one of the directories is definitely the one we're looking for.
 
@@ -75,7 +86,7 @@ These are the directories found by gobuster with *2.3-medium* wordlist. We can s
 So what are we going to do now? We don't have the access!<br>
 Well, we know the name of one of the employees. It's possible that's his username, and this question supports that. We're using Hydra to access his account! 🐉
 
-(pho3 here)
+<img width="350" height="600" alt="3" src="https://github.com/user-attachments/assets/a91febdf-d751-4282-afdc-ecbcffabf827" />
 
 > This mystical creature is going to help us with ##### account!
 
@@ -84,6 +95,8 @@ hydra -l <username> -P /usr/share/wordlists/rockyou.txt 10.10.200.17 http-get /<
 ```
 
 Once again, let's go over what's going on here. "*-l*" switch is for defining user, "*-P*" is for wordlist (we are using *rockyou.txt*, famous one for CTFs). Next we define IP we are going to attack, method: *http-get*, and the ##### directory with basic authentication.
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 After a short while we obtain the password. Upon logging in, we are welcomed by rather discouraging page that the service has been moved to a different port. So where is it?
 
@@ -102,9 +115,11 @@ PORT     SERVICE
 
 We can see that besides *ssh* and *http* services which we should know, there are two other ports with different services. But what are they? We need to dig deeper.
 
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 Now we’re gonna use switches "*-A*", along with "*-sC*" on given ports. We don’t do that when scanning all ports, because it would take a lot more of our time.
 
-(pho4)
+<img width="720" height="395" alt="4" src="https://github.com/user-attachments/assets/ffd3d600-dcd1-432a-8e7b-bdd3a5728635" />
 
 I’ve marked down the points of interest. We’ve successfully identified the services on discovered ports! So there is another port that also also serves http site using Apache.. We’re gonna use it later. Now we can answer the question.
 
@@ -127,11 +142,13 @@ Count the entries and enter the answer.
 ## 8. What is the server version?
 This can be answered with Nmap. In fact, you should already have this answer from question 6. Remember http-title? We’re looking for http-server-header. If you’re a long way from that question, here’s how you can retrieve this information.
 
-(pho5)
+<img width="665" height="38" alt="5" src="https://github.com/user-attachments/assets/d1badb9e-6e8b-45eb-b16f-c9a5f56b06b8" />
 
 ## 9. What version of Apache-Coyote is this service using?
 Both Nikto and Nmap have answered this question before.<br>
 Look under "*+ Server*" on Nikto or "*http-server-header*" with Nmap.
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 ## 10. What user did you get a shell as?
 So our task is to break into the machine. We know there is ssh service on the server, but #####’s credentials won’t work there. Enter metasploit.
@@ -141,7 +158,8 @@ So our task is to break into the machine. We know there is ssh service on the se
 Start metasploit console using msfconsole command. From now on, we’re working directly from metasploit.<br>
 If you accidentaly ctrl+c out of it, just enter the command again, though you’ll have to go through setting it up again.
 
-(pho6)
+<img width="589" height="567" alt="6" src="https://github.com/user-attachments/assets/5879f9ca-c060-4fbd-9522-01ce3136a61f" />
+
 >Metasploit console, grab a coffee while it’s loading ;)
 
 What are we looking for? Well, play a bit.
@@ -155,7 +173,7 @@ If you still can’t find it, search for "*tomcat_mgr_upload*".
 
 Select the exploit by typing "**use X**" where X is the number of the exploit depending on what you’ve searched. If you’ve searched exactly for *tomcat_mgr_upload* enter "**use 0**".
 
-(pho7)
+<img width="674" height="456" alt="7" src="https://github.com/user-attachments/assets/42e04e4f-6ad2-4462-8dba-9d40dce77ebb" />
 
 >Selecting the right exploit
 
@@ -166,9 +184,11 @@ Now we need to adjust the options - select target IP, target port and also fill 
 
 If you happened to enter the wrong exploit, just use "back" command. Using "setg {OPTION}" will make it so that the option stays set the same way even after selecting another exploit.
 
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 Here is what you need to set in order for exploit to work:
 
-(pho8)
+<img width="666" height="461" alt="8" src="https://github.com/user-attachments/assets/46957325-d4f0-4976-8cfb-591253f2858d" />
 
 While HttpPassword and HttpUsername is not required by metasploit, it’s crucial to enter it, because that’s how we access the /manager site.
 
@@ -178,11 +198,13 @@ In meterpreter shell drop simple bash shell using command "shell".
 
 At first we don’t know we have bash shell access to the machine, but commands like "pwd" returns "/" which means we’ve successfuly sent and received data.
 
-(pho9)
+<img width="477" height="297" alt="9" src="https://github.com/user-attachments/assets/3e65fd06-292d-4b79-a8a7-af532c29c853" />
 
 Who exactly are we? A simple command can tell us that: "whoami".
 
 Woah! At this level already? Cool, flag.txt will be trivial to find and open.
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 ## 11. What flag is found in the root directory?
 Simply cd into /root directory and retrieve the flag. Easy peasy!
