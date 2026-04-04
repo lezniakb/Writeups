@@ -2,7 +2,7 @@
 ### Let's dig into that Windows
 _"Rise for the national anthem..."_
 
-### Overview
+### Intro
 Link to the tryhackme room: [Anthem](https://tryhackme.com/room/anthem)
 
 *Target IP*: 10.112.179.43<br>
@@ -15,12 +15,12 @@ As always, we're going to use Nmap to enumerate ports on target machine.
 
 `nmap -sS 10.112.179.43 -p- -T4 -vv -n -Pn`
 
-Switches explanation, because why not (maybe it'll prove to be useful to you :)
+Switches explanation below, because why not (maybe it'll prove to be useful to you :)
 - `-sS`: a TCP SYN scan. It's called stealthy (but not really that much), and will find most open services
 - `-p-`: scan all 65535 ports on target machine. It's a quirk of mine. By default Nmap scans only the most common ones and for the most part it's sufficient
 - `-T4`: make the scan go faster. We don't care about being loud in CTFs
-- `vv`: make the output extra verbose (hence double `v`)
-- `n`: don't do reverse DNS lookup (don't look for domains under that IP)
+- `-vv`: make the output extra verbose (hence double `v`)
+- `-n`: don't do reverse DNS lookup (don't look for domains under that IP)
 - `-Pn`: skip host scan. Because we're scanning Windows, it might drop our pings (and it does) so we skip it
 
 > Because of the extensive port scan, you can relax and take a chill pill ;)
@@ -39,7 +39,7 @@ Alright, we now know what services are open. Check what these services actually 
 
 `nmap -sC -sV -O 10.112.179.43 -p80,3389 -Pn -vv -T4`
 
-Switches explanation (again, but diffrent!)
+Switches explanation (again, but different!)
 - `-sC`: runs default **sC**ripts for additional detection (it may find users or anonymous shares sometimes)
 - `-sV`: checks **s**ervice **V**ersion; a crucial switch, because we can check if there are vulnerabilities for these services (not discussed in this writeup, though)
 - `-O`: try to guess **O**perating system
@@ -71,8 +71,7 @@ Well, what do you know, if you enter `http://[TARGET_IP]/robots.txt`, you'll fin
 
 **Answer 4**: `UmbracoIsTheBest!`
 
-**Question 5**: `What CMS is the website using?`
-
+**Question 5**: `What CMS is the website using?`<br>
 Next we're looking for CMS engine. If we find its version along the way, it might be helpful
 
 > Nmap couldn't tell us what the CMS engine is, so we'll look for it ourselves. 
@@ -134,50 +133,57 @@ An author of this article wrote a poem about **the Administrator**. If we google
 **Question 8**: `Can we find the email address of the administrator?`<br>
 Yet another question that we need to come up with ourselves. Go into the other article "*We are hiring*". Author *Jane Doe* is using work email `JD@anthem.com`. So for the Administrator, Solomon Grundy, it must be `SG@anthem.com`
 
-Answer 8: `SG@anthem.com`
+**Answer 8**: `SG@anthem.com`
+
+---
 
 ### Flags, flags, flags...
 There are 4 flags hidden throughout the web server. One of which we have found while looking around subpages. 
 
-Dirsearch found '/authors' subpage. The flag found there is `THM{L0L_WH0_D15}`. Looking at the pattern with underscores, it's the third flag. 
+Dirsearch found `/authors` page with the flag: `THM{L0L_WH0_D15}`. By looking at the pattern with underscores, it's the third flag. 
 
-Where other flags could be hiding? There is a sitemap (at /sitemap) which tells us about subpages. Sadly, I've discovered all of them. 
+Where other flags could be hiding? There is a sitemap (at `/sitemap`) which tells us about subpages. Sadly, I've discovered all of them beforehand. So there is nothing new there.
 
-Oh, remember that dirsearch found a subpage called `umbraco`? Well it turns out that's a login page! The CTF author told us that no bruteforcing is needed here, and he's right. We already have the email address and the password.
+Oh, do you remember that dirsearch found a subpage called `umbraco`? Well it turns out that's a **login page**! The CTF author told us that no bruteforcing is needed here, and he's right. We already have the email address and the password.
 
-email: SG@anthem.com
-password: UmbracoIsTheBest!
+email: `SG@anthem.com`<br>
+password: `UmbracoIsTheBest!`
 
-Surprise, surprise! Logged in as admin :)
+Surprise, surprise! Logged in as **admin** :)
 
-Under CMUmbracoTools we have log pages. One of the first things we notice is that Umbraco is on version 7.15.4. It's good to know, maybe there are vulnerabilities for that version.
+Under CMUmbracoTools tab (on the left-side toolbar) we have log pages. One of the first things we notice is that Umbraco is on version `7.15.4`. It's good to know, maybe there are vulnerabilities for that version.
 
-I took a closer look inside the Content tab. Turns out, "We are hiring" article has Meta Tags set. Turns out, it's the flag 1! `THM{L0L_WH0_US3S_M3T4}`
+> Turns out that there are no vulnerabilities for that version that we can use here
 
-Ah, the article "A cheers to our IT department" also has a meta tag set.. How original ;p
+I took a closer look inside the `Content` tab. Turns out, "*We are hiring*" article has Meta Tags set. Well, well, well, it's the flag number one! `THM{L0L_WH0_US3S_M3T4}`
+
+Ah, the article "*A cheers to our IT department*" also has a meta tag set.. _How original_ ;p
 Found flag 4: `THM{AN0TH3R_M3TA}`
 
 **Where is that last flag??**
-...Had to manually search through HTML source code again. Turns out I missed a table with the search bar, and the flag was there. Anyway, it's the final one. `THM{G!T_G00D}`
+...Had to manually search through HTML source code again. Turns out I *missed* a small part with the search bar, and the flag was there. Anyway, it's the final one. `THM{G!T_G00D}`
 
+---
 
 ### Flag answers
 To sum it up, these are the flags we've found:
 
-flag 1: `THM{L0L_WH0_US3S_M3T4}`
-flag 2: `THM{G!T_G00D}`
-flag 3: `THM{L0L_WH0_D15}`
+flag 1: `THM{L0L_WH0_US3S_M3T4}`<br>
+flag 2: `THM{G!T_G00D}`<br>
+flag 3: `THM{L0L_WH0_D15}`<br>
 flag 4: `THM{AN0TH3R_M3TA}`
+
+---
 
 ### Final stage
 Remember we found 2 open ports? On port `80` was the web page. Port 3389 is known to be a RDP service (Remote Desktop Protocol). It means we can remotely access a user desktop. 
 
 We know the credentials by now. In this case, it turns out we don't use `@anthem.com`. The username is simply `SG`
 
-Open up Remmina. Left click on a new connection button and enter:
-Server: `TARGET_IP`
-Username: `SG`
-Password: `UmbracoIsTheBest!`
+Open up Remmina. Left click on a new connection button and enter:<br>
+Server: `TARGET_IP`<br>
+Username: `SG`<br>
+Password: `UmbracoIsTheBest!`<br>
 Domain: `anthem.com`
 
 Click connect, and the session should open. There's a note there!
