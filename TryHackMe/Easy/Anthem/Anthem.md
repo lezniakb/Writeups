@@ -8,12 +8,14 @@ Link to the tryhackme room: [Anthem](https://tryhackme.com/room/anthem)
 *Target IP*: 10.112.179.43<br>
 *Attacker IP*: 10.112.81.85
 
+---
+
 ### Port Scan
 As always, we're going to use Nmap to enumerate ports on target machine.
 
 `nmap -sS 10.112.179.43 -p- -T4 -vv -n -Pn`
 
-Flag explanation, because why not (maybe it'll prove to be useful to you :)
+Switches explanation, because why not (maybe it'll prove to be useful to you :)
 - `-sS`: a TCP SYN scan. It's called stealthy (but not really that much), and will find most open services
 - `-p-`: scan all 65535 ports on target machine. It's a quirk of mine. By default Nmap scans only the most common ones and for the most part it's sufficient
 - `-T4`: make the scan go faster. We don't care about being loud in CTFs
@@ -21,7 +23,7 @@ Flag explanation, because why not (maybe it'll prove to be useful to you :)
 - `n`: don't do reverse DNS lookup (don't look for domains under that IP)
 - `-Pn`: skip host scan. Because we're scanning Windows, it might drop our pings (and it does) so we skip it
 
-Because of the extensive port scan, you can relax and take a chill pill ;)
+> Because of the extensive port scan, you can relax and take a chill pill ;)
 
 The output should show up after a minute or so. Using `-vv` can tell you at what point the Nmap is.
 ```
@@ -37,9 +39,9 @@ Alright, we now know what services are open. Check what these services actually 
 
 `nmap -sC -sV -O 10.112.179.43 -p80,3389 -Pn -vv -T4`
 
-Flag explanation (again, but diffrent!)
+Switches explanation (again, but diffrent!)
 - `-sC`: runs default **sC**ripts for additional detection (it may find users or anonymous shares sometimes)
-- `-sV`: checks service **V**ersion; a crucial switch, because we can check if there are vulnerabilities for these services (not discussed in this writeup, though)
+- `-sV`: checks **s**ervice **V**ersion; a crucial switch, because we can check if there are vulnerabilities for these services (not discussed in this writeup, though)
 - `-O`: try to guess **O**perating system
 
 From the output we can see that this is a Microsoft machine with a simple HTTP server and a certain `3389` port. We'll get to it later.
@@ -49,49 +51,75 @@ PORT     STATE SERVICE       REASON          VERSION
 3389/tcp open  ms-wbt-server syn-ack ttl 128 Microsoft Terminal Services
 ```
 
-**Question 2**: `What port is for the web server?`
+**Question 2**: `What port is for the web server?`<br>
 **Answer 2**: `80`
 
-**Question 3**: `What port is for remote desktop service?`
+**Question 3**: `What port is for remote desktop service?`<br>
 **Answer 3**: `3389`
+
+--- 
 
 ### The HTTPage
 
-Let's look into the webpage
-Next question asks us about "pages [which] web crawlers check for". We're probably looking for robots.txt file. Well, what do you know, if you enter `http://[TARGET_IP]/robots.txt`, you'll find the file! One thing stands out, a text string: `UmbracoIsTheBest!`
+Let's dive into the webpage!<br>
 
-Question 4: `What is a possible password in one of the pages web crawlers check for?`
-Answer 4: `UmbracoIsTheBest!`
+Next question asks us about "pages [for which] web crawlers check for". We're probably looking for *robots.txt* file. 
 
-Next we're looking for CMS engine and its version. Nmap didn't tell us that. We'll look for clues in HTML source code. In the meantime, I'm running dirsearch, an alternative to dirbuster/gobuster.
+Well, what do you know, if you enter `http://[TARGET_IP]/robots.txt`, you'll find the file! One thing stands out, a text string: `UmbracoIsTheBest!`
 
-dirsearch -u http://10.112.179.43/ -x 404
+**Question 4**: `What is a possible password in one of the pages web crawlers check for?`<br>
+**Answer 4**: `UmbracoIsTheBest!`
+
+Next we're looking for CMS engine. If we find its version along the way, it might be helpful
+
+> Nmap couldn't tell us what the CMS engine is, so we'll look for it ourselves. 
+
+Let's start with the HTML source code. In the meantime, I started `dirsearch`, an alternative to dirbuster/gobuster. It's checking against hidden webpage resources
+
+`dirsearch -u http://10.112.179.43/ -x 404`
+
+Switches explanation (yes, really!)
+- `-u`: URL of the page we're scanning
+- `-x 404`: Exclude results that go to page 404. This page floods us with 404 responses, so this takes care of that
 
 > I've added '-x 404' to exclude NOT FOUND status codes 
 
-I went through the HTML code, but didn't find anything. I started to look for clues with dirsearch
+While *dirsearch* was running, I went through the HTML code, but didn't find anything useful (though I admit, I scratched the metadata and didn't open every dropdown). 
+
+So... What dirsearch told us?
 
 <img width="555" height="209" alt="pho1" src="https://github.com/user-attachments/assets/c66ccec4-e4cd-4497-8fd5-2a5bd3b5fa86" />
 
-On 'authors' subpage there's a THM{...} flag! It's unrelated to the current question though..
+Well, we do know about `blog` and `categories` subpage, but `authors` seems interesting..
 
 <img width="280" height="133" alt="pho2" src="https://github.com/user-attachments/assets/d041e383-909b-4068-8553-da5aa937eb8d" />
 
+On 'authors' subpage there's a THM{...} flag! 
+
+> It's unrelated to the current question though..
+
 I looked around the site, but there were no obvious clues as to what CMS is being used.<br>
-In dirsearch, a few lines caught my attention:
+In dirsearch, the next few lines caught my attention:
 
 <img width="460" height="117" alt="pho3" src="https://github.com/user-attachments/assets/3b1fdf48-cd91-4168-85ba-afb9f8d56fb1" />
 
 > A quick Google search shows us that 'Umbraco' is a CMS engine
 
-Question 5: `What CMS is the website using?`
-Answer 5: `Umbraco`
+**Question 5**: `What CMS is the website using?`<br>
+**Answer 5**: `Umbraco`
 
-Question 6: `What is the domain of the website?`
-Don't be ridicolous, the answer's right at the top of the page!
-Answer 6: `anthem.com`
+**Question 6**: `What is the domain of the website?`<br>
 
-Question 7: `What's the name of the Administrator`
+> **Don't be ridicolous, the answer's right at the top of the main page!**
+
+**Answer 6**: `anthem.com`
+
+---
+
+### The Administrator
+
+**Question 7**: `What's the name of the Administrator`
+
 It's a tricky question. As far as I know, the Administrator is not mentioned by name on the web server. However, there are two articles, one of which contains the word "admin". 
 
 <img width="480" height="524" alt="pho4" src="https://github.com/user-attachments/assets/2cc67cf9-e390-4527-b666-6fc3474836ef" />
