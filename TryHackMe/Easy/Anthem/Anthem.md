@@ -21,43 +21,41 @@ Flag explanation, because why not (maybe it'll prove to be useful to you :)
 - `n`: don't do reverse DNS lookup (don't look for domains under that IP)
 - `-Pn`: skip host scan. Because we're scanning Windows, it might drop our pings (and it does) so we skip it
 
+Because of the extensive port scan, you can relax and take a chill pill ;)
+
+The output should show up after a minute or so. Using `-vv` can tell you at what point the Nmap is.
+```
 PORT     STATE SERVICE       REASON
 80/tcp   open  http          syn-ack ttl 128
 3389/tcp open  ms-wbt-server syn-ack ttl 128
+```
 
-Question 1: `Let's run nmap and check what ports are open.`
-Answer 1: `No answer needed`
+**Question 1**: `Let's run nmap and check what ports are open.`<br>
+**Answer 1**: `No answer needed`
 
-nmap -sC -sV -O 10.112.179.43 -p80,3389 -Pn -vv -T4
+Alright, we now know what services are open. Check what these services actually are. This time, we're just scanning selected open ports: `-p80,3389`. 
 
+`nmap -sC -sV -O 10.112.179.43 -p80,3389 -Pn -vv -T4`
+
+Flag explanation (again, but diffrent!)
+- `-sC`: runs default **sC**ripts for additional detection (it may find users or anonymous shares sometimes)
+- `-sV`: checks service **V**ersion; a crucial switch, because we can check if there are vulnerabilities for these services (not discussed in this writeup, though)
+- `-O`: try to guess **O**perating system
+
+From the output we can see that this is a Microsoft machine with a simple HTTP server and a certain `3389` port. We'll get to it later.
 ```
 PORT     STATE SERVICE       REASON          VERSION
 80/tcp   open  http          syn-ack ttl 128 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
 3389/tcp open  ms-wbt-server syn-ack ttl 128 Microsoft Terminal Services
-| rdp-ntlm-info: 
-|   Target_Name: WIN-LU09299160F
-|   NetBIOS_Domain_Name: WIN-LU09299160F
-|   NetBIOS_Computer_Name: WIN-LU09299160F
-|   DNS_Domain_Name: WIN-LU09299160F
-|   DNS_Computer_Name: WIN-LU09299160F
-|   Product_Version: 10.0.17763
-|_  System_Time: 2026-04-04T13:57:38+00:00
-| ssl-cert: Subject: commonName=WIN-LU09299160F
-| Issuer: commonName=WIN-LU09299160F
-| Public Key type: rsa
-| Public Key bits: 2048
-| Signature Algorithm: sha256WithRSAEncryption
-| Not valid before: 2026-04-03T13:35:58
-| Not valid after:  2026-10-03T13:35:58
-| MD5:   554a 2021 5d8d e7b9 0083 e7f2 a376 40b2
-| SHA-1: 7e62 ec2d a35a 8180 5b66 3493 6a1d b0d1 fb8d 1c55
 ```
 
-Question 2: `What port is for the web server?`
-Answer 2: `80`
+**Question 2**: `What port is for the web server?`
+**Answer 2**: `80`
 
-Question 3: `What port is for remote desktop service?`
-Answer 3: `3389`
+**Question 3**: `What port is for remote desktop service?`
+**Answer 3**: `3389`
+
+### The HTTPage
 
 Let's look into the webpage
 Next question asks us about "pages [which] web crawlers check for". We're probably looking for robots.txt file. Well, what do you know, if you enter `http://[TARGET_IP]/robots.txt`, you'll find the file! One thing stands out, a text string: `UmbracoIsTheBest!`
