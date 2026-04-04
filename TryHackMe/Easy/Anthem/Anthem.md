@@ -1,1 +1,202 @@
-## Initial commit
+Anthem Room
+
+https://tryhackme.com/room/anthem
+Target IP: 10.112.179.43
+Attacker IP: 10.112.81.85
+
+nmap -sS 10.112.179.43 -p- -T4 -vv -n -Pn
+
+PORT     STATE SERVICE       REASON
+80/tcp   open  http          syn-ack ttl 128
+3389/tcp open  ms-wbt-server syn-ack ttl 128
+
+Question 1: `Let's run nmap and check what ports are open.`
+Answer 1: `No answer needed`
+
+nmap -sC -sV -O 10.112.179.43 -p80,3389 -Pn -vv -T4
+
+PORT     STATE SERVICE       REASON          VERSION
+80/tcp   open  http          syn-ack ttl 128 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+3389/tcp open  ms-wbt-server syn-ack ttl 128 Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: WIN-LU09299160F
+|   NetBIOS_Domain_Name: WIN-LU09299160F
+|   NetBIOS_Computer_Name: WIN-LU09299160F
+|   DNS_Domain_Name: WIN-LU09299160F
+|   DNS_Computer_Name: WIN-LU09299160F
+|   Product_Version: 10.0.17763
+|_  System_Time: 2026-04-04T13:57:38+00:00
+| ssl-cert: Subject: commonName=WIN-LU09299160F
+| Issuer: commonName=WIN-LU09299160F
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2026-04-03T13:35:58
+| Not valid after:  2026-10-03T13:35:58
+| MD5:   554a 2021 5d8d e7b9 0083 e7f2 a376 40b2
+| SHA-1: 7e62 ec2d a35a 8180 5b66 3493 6a1d b0d1 fb8d 1c55
+
+
+Question 2: `What port is for the web server?`
+Answer 2: `80`
+
+Question 3: `What port is for remote desktop service?`
+Answer 3: `3389`
+
+Let's look into the webpage
+Next question asks us about "pages [which] web crawlers check for". We're probably looking for robots.txt file. Well, what do you know, if you enter `http://[TARGET_IP]/robots.txt`, you'll find the file! One thing stands out, a text string: `UmbracoIsTheBest!`
+
+Question 4: `What is a possible password in one of the pages web crawlers check for?`
+Answer 4: `UmbracoIsTheBest!`
+
+Next we're looking for CMS engine and its version. Nmap didn't tell us that. We'll look for clues in HTML source code. In the meantime, I'm running dirsearch, an alternative to dirbuster/gobuster.
+
+dirsearch -u http://10.112.179.43/ -x 404
+
+> I've added '-x 404' to exclude NOT FOUND status codes 
+
+I went through the HTML code, but didn't find anything. I started to look for clues with dirsearch
+
+(pho1)
+
+> On 'authors' subpage there's a THM{...} flag! It's unrelated to the current question though..
+
+(pho2)
+
+I looked around the site, but there were no obvious clues as to what CMS is being used.<br>
+In dirsearch, a few lines caught my attention:
+
+(pho3)
+
+> A quick Google search shows us that 'Umbraco' is a CMS engine
+
+Question 5: `What CMS is the website using?`
+Answer 5: `Umbraco`
+
+Question 6: `What is the domain of the website?`
+Don't be ridicolous, the answer's right at the top of the page!
+Answer 6: `anthem.com`
+
+Question 7: `What's the name of the Administrator`
+It's a tricky question. As far as I know, the Administrator is not mentioned by name on the web server. However, there are two articles, one of which contains the word "admin". 
+
+(pho4)
+
+An author of this article wrote a poem about the Administrator. If we take a look and google it, we'll find out that it's a Nursery Rhyme called "Solomon Grundy". Made originally by no other but James Orchard Halliwell - the same person that supposedly wrote the article on this website. 
+
+https://en.wikipedia.org/wiki/Solomon_Grundy_(nursery_rhyme)
+
+So the Administrator must be Solomon Grundy! Scooby Dooby Doo!
+
+Answer 7: `Solomon Grundy`
+
+Question 8: `Can we find the email address of the administrator?`
+Yet another question that we need to come up with ourselves. Go into the other article "We are hiring". Author Jane Doe is using work email JD@anthem.com. So for the Administrator, Solomon Grundy it must be `SG@anthem.com`
+
+Answer 8: `SG@anthem.com`
+
+### Flags, flags, flags...
+There are 4 flags hidden throughout the web server. One of which we have found while looking around subpages. 
+
+Dirsearch found '/authors' subpage. The flag found there is `THM{L0L_WH0_D15}`. Looking at the pattern with underscores, it's the third flag. 
+
+Where other flags could be hiding? There is a sitemap (at /sitemap) which tells us about subpages. Sadly, I've discovered all of them. 
+
+Oh, remember that dirsearch found a subpage called `umbraco`? Well it turns out that's a login page! The CTF author told us that no bruteforcing is needed here, and he's right. We already have the email address and the password.
+
+email: SG@anthem.com
+password: UmbracoIsTheBest!
+
+Surprise, surprise! Logged in as admin :)
+
+Under CMUmbracoTools we have log pages. One of the first things we notice is that Umbraco is on version 7.15.4. It's good to know, maybe there are vulnerabilities for that version.
+
+I took a closer look inside the Content tab. Turns out, "We are hiring" article has Meta Tags set. Turns out, it's the flag 1! `THM{L0L_WH0_US3S_M3T4}`
+
+Ah, the article "A cheers to our IT department" also has a meta tag set.. How original ;p
+Found flag 4: `THM{AN0TH3R_M3TA}`
+
+**Where is that last flag??**
+...Had to manually search through HTML source code again. Turns out I missed a table with the search bar, and the flag was there. Anyway, it's the final one. `THM{G!T_G00D}`
+
+
+### Flag answers
+To sum it up, these are the flags we've found:
+
+flag 1: `THM{L0L_WH0_US3S_M3T4}`
+flag 2: `THM{G!T_G00D}`
+flag 3: `THM{L0L_WH0_D15}`
+flag 4: `THM{AN0TH3R_M3TA}`
+
+### Final stage
+Remember we found 2 open ports? On port `80` was the web page. Port 3389 is known to be a RDP service (Remote Desktop Protocol). It means we can remotely access a user desktop. 
+
+We know the credentials by now. In this case, it turns out we don't use `@anthem.com`. The username is simply `SG`
+
+Open up Remmina. Left click on a new connection button and enter:
+Server: `TARGET_IP`
+Username: `SG`
+Password: `UmbracoIsTheBest!`
+Domain: `anthem.com`
+
+Click connect, and the session should open. There's a note there!
+
+Question 1: `Let's figure out the username and password to log in to the box. (The box is not on a domain)`
+Answer 1: `No answer needed`
+
+> But we know it's SG:UmbracoIsTheBest!
+
+Question 2: `Gain initial access to the machine, what is the contents of user.txt?`
+Answer 2: `THM{N00T_NO0T}`
+
+Next flag is hidden. It's always worth it to open Explorer settings, go to `View` -> `Options` -> `View tab` and select `Show hidden files, folders and drives`. You can also deselect `Hide extensions for known file types` while we're at it. 
+
+(pho5)
+
+> By the way, if the window is too small, select `Toggle dynamic resolution update` on the left side bar of settings in Remmina
+
+Dig deeper. Go to `C://`... What is that? A hidden `backup` folder? I wonder what's there.. A text file called `restore.txt`! But we don't have permissions to open it :(
+
+Then, an idea came to my mind.. Look at the ACL table! 
+
+> ACL it's an Access Control List, which can tell us who is the owner of a file, and what permissions do we have
+
+(pho6)
+
+SG is the owner! So we just need to add read permissions. We can do it since we're the owner.
+
+(pho7)
+
+> I went down the easy path and just reset the permissions to their defaults. Worked perfectly
+
+Nice! The admin password is there. 
+
+Question 3: `Can we spot the admin password?`
+Answer 3: `ChangeMeBaby1MoreTime`
+
+Found a way to escalate my privileges. [This article](https://blog.danskingdom.com/Run-PowerShell-as-another-user/) helps. Basically we're going to save Administrator credentials in a powershell variable, then use it with `Enter-PSSession` command.
+
+After entering `$credential = Get-Credential` you will be prompted to enter the username and password. Use login:`Administrator` and password:`ChangeMeBaby1MoreTime`
+
+(pho8)
+
+Now for the final part: `Enter-PSSession -ComputerName localhost -Credential $credential`
+
+(pho9)
+
+We should be at `.\Administrator\Documents` right now. Privilege escalated! 
+
+> You could also create a new session in Remmina. I just decided to go with Powershell and true Windows privilege escalation!
+
+Go to `C:\Users\Administrator\Desktop`, root.txt is just sitting there.
+
+(pho10)
+
+Final flag: `THM{Y0U_4R3_1337}`
+
+### Conclusion
+
+
+### Sources
+- 
+- [Run PowerShell as another user](https://blog.danskingdom.com/Run-PowerShell-as-another-user/
