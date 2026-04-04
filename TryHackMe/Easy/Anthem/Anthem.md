@@ -1,10 +1,25 @@
-Anthem Room
+# Anthem
+### Let's dig into that Windows
+_"Rise for the national anthem..."_
 
-https://tryhackme.com/room/anthem
-Target IP: 10.112.179.43
-Attacker IP: 10.112.81.85
+### Overview
+Link to the tryhackme room: [Anthem](https://tryhackme.com/room/anthem)
 
-nmap -sS 10.112.179.43 -p- -T4 -vv -n -Pn
+*Target IP*: 10.112.179.43<br>
+*Attacker IP*: 10.112.81.85
+
+### Port Scan
+As always, we're going to use Nmap to enumerate ports on target machine.
+
+`nmap -sS 10.112.179.43 -p- -T4 -vv -n -Pn`
+
+Flag explanation, because why not (maybe it'll prove to be useful to you :)
+- `-sS`: a TCP SYN scan. It's called stealthy (but not really that much), and will find most open services
+- `-p-`: scan all 65535 ports on target machine. It's a quirk of mine. By default Nmap scans only the most common ones and for the most part it's sufficient
+- `-T4`: make the scan go faster. We don't care about being loud in CTFs
+- `vv`: make the output extra verbose (hence double `v`)
+- `n`: don't do reverse DNS lookup (don't look for domains under that IP)
+- `-Pn`: skip host scan. Because we're scanning Windows, it might drop our pings (and it does) so we skip it
 
 PORT     STATE SERVICE       REASON
 80/tcp   open  http          syn-ack ttl 128
