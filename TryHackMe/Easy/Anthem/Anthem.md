@@ -15,6 +15,7 @@ Answer 1: `No answer needed`
 
 nmap -sC -sV -O 10.112.179.43 -p80,3389 -Pn -vv -T4
 
+```
 PORT     STATE SERVICE       REASON          VERSION
 80/tcp   open  http          syn-ack ttl 128 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
 3389/tcp open  ms-wbt-server syn-ack ttl 128 Microsoft Terminal Services
@@ -35,7 +36,7 @@ PORT     STATE SERVICE       REASON          VERSION
 | Not valid after:  2026-10-03T13:35:58
 | MD5:   554a 2021 5d8d e7b9 0083 e7f2 a376 40b2
 | SHA-1: 7e62 ec2d a35a 8180 5b66 3493 6a1d b0d1 fb8d 1c55
-
+```
 
 Question 2: `What port is for the web server?`
 Answer 2: `80`
@@ -57,16 +58,16 @@ dirsearch -u http://10.112.179.43/ -x 404
 
 I went through the HTML code, but didn't find anything. I started to look for clues with dirsearch
 
-(pho1)
+<img width="555" height="209" alt="pho1" src="https://github.com/user-attachments/assets/c66ccec4-e4cd-4497-8fd5-2a5bd3b5fa86" />
 
-> On 'authors' subpage there's a THM{...} flag! It's unrelated to the current question though..
+On 'authors' subpage there's a THM{...} flag! It's unrelated to the current question though..
 
-(pho2)
+<img width="280" height="133" alt="pho2" src="https://github.com/user-attachments/assets/d041e383-909b-4068-8553-da5aa937eb8d" />
 
 I looked around the site, but there were no obvious clues as to what CMS is being used.<br>
 In dirsearch, a few lines caught my attention:
 
-(pho3)
+<img width="460" height="117" alt="pho3" src="https://github.com/user-attachments/assets/3b1fdf48-cd91-4168-85ba-afb9f8d56fb1" />
 
 > A quick Google search shows us that 'Umbraco' is a CMS engine
 
@@ -80,7 +81,7 @@ Answer 6: `anthem.com`
 Question 7: `What's the name of the Administrator`
 It's a tricky question. As far as I know, the Administrator is not mentioned by name on the web server. However, there are two articles, one of which contains the word "admin". 
 
-(pho4)
+<img width="480" height="524" alt="pho4" src="https://github.com/user-attachments/assets/2cc67cf9-e390-4527-b666-6fc3474836ef" />
 
 An author of this article wrote a poem about the Administrator. If we take a look and google it, we'll find out that it's a Nursery Rhyme called "Solomon Grundy". Made originally by no other but James Orchard Halliwell - the same person that supposedly wrote the article on this website. 
 
@@ -151,7 +152,7 @@ Answer 2: `THM{N00T_NO0T}`
 
 Next flag is hidden. It's always worth it to open Explorer settings, go to `View` -> `Options` -> `View tab` and select `Show hidden files, folders and drives`. You can also deselect `Hide extensions for known file types` while we're at it. 
 
-(pho5)
+<img width="444" height="280" alt="pho5" src="https://github.com/user-attachments/assets/b1e4c393-cdc1-4fd9-854d-f9316e52687a" />
 
 > By the way, if the window is too small, select `Toggle dynamic resolution update` on the left side bar of settings in Remmina
 
@@ -161,11 +162,11 @@ Then, an idea came to my mind.. Look at the ACL table!
 
 > ACL it's an Access Control List, which can tell us who is the owner of a file, and what permissions do we have
 
-(pho6)
+<img width="370" height="132" alt="pho6" src="https://github.com/user-attachments/assets/df42f6a5-7293-44cd-89bf-5e365c72a7e6" />
 
 SG is the owner! So we just need to add read permissions. We can do it since we're the owner.
 
-(pho7)
+<img width="681" height="332" alt="pho7" src="https://github.com/user-attachments/assets/42e076a8-348d-4f2d-b8ad-876c256ff809" />
 
 > I went down the easy path and just reset the permissions to their defaults. Worked perfectly
 
@@ -178,11 +179,11 @@ Found a way to escalate my privileges. [This article](https://blog.danskingdom.c
 
 After entering `$credential = Get-Credential` you will be prompted to enter the username and password. Use login:`Administrator` and password:`ChangeMeBaby1MoreTime`
 
-(pho8)
+<img width="397" height="318" alt="pho8" src="https://github.com/user-attachments/assets/40f428cb-5fc0-42ea-8ebf-39fd7f246623" />
 
 Now for the final part: `Enter-PSSession -ComputerName localhost -Credential $credential`
 
-(pho9)
+<img width="709" height="195" alt="pho9" src="https://github.com/user-attachments/assets/b2130e31-8f28-4f16-919c-45c636f8dfe8" />
 
 We should be at `.\Administrator\Documents` right now. Privilege escalated! 
 
@@ -190,7 +191,7 @@ We should be at `.\Administrator\Documents` right now. Privilege escalated!
 
 Go to `C:\Users\Administrator\Desktop`, root.txt is just sitting there.
 
-(pho10)
+<img width="629" height="258" alt="pho10" src="https://github.com/user-attachments/assets/2cd867e0-7eab-49d5-a1d8-5b4757e45e8c" />
 
 Final flag: `THM{Y0U_4R3_1337}`
 
@@ -199,4 +200,4 @@ Final flag: `THM{Y0U_4R3_1337}`
 
 ### Sources
 - 
-- [Run PowerShell as another user](https://blog.danskingdom.com/Run-PowerShell-as-another-user/
+- [Run PowerShell as another user](https://blog.danskingdom.com/Run-PowerShell-as-another-user/)
