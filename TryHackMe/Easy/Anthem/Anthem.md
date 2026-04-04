@@ -63,12 +63,15 @@ PORT     STATE SERVICE       REASON          VERSION
 
 Let's dive into the webpage!<br>
 
+**Question 4**: `What is a possible password in one of the pages web crawlers check for?`
+
 Next question asks us about "pages [for which] web crawlers check for". We're probably looking for *robots.txt* file. 
 
 Well, what do you know, if you enter `http://[TARGET_IP]/robots.txt`, you'll find the file! One thing stands out, a text string: `UmbracoIsTheBest!`
 
-**Question 4**: `What is a possible password in one of the pages web crawlers check for?`<br>
 **Answer 4**: `UmbracoIsTheBest!`
+
+**Question 5**: `What CMS is the website using?`
 
 Next we're looking for CMS engine. If we find its version along the way, it might be helpful
 
@@ -105,12 +108,11 @@ In dirsearch, the next few lines caught my attention:
 
 > A quick Google search shows us that 'Umbraco' is a CMS engine
 
-**Question 5**: `What CMS is the website using?`<br>
 **Answer 5**: `Umbraco`
 
-**Question 6**: `What is the domain of the website?`<br>
+**Question 6**: `What is the domain of the website?`
 
-> **Don't be ridicolous, the answer's right at the top of the main page!**
+> **Don't be ridiculous, the answer's right at the top of the main page!**
 
 **Answer 6**: `anthem.com`
 
@@ -118,22 +120,19 @@ In dirsearch, the next few lines caught my attention:
 
 ### The Administrator
 
-**Question 7**: `What's the name of the Administrator`
-
-It's a tricky question. As far as I know, the Administrator is not mentioned by name on the web server. However, there are two articles, one of which contains the word "admin". 
+**Question 7**: `What's the name of the Administrator`<br>
+It's a tricky question. As far as I know, **the Administrator** is not mentioned by name on the web server. However, there are two articles, one of which contains the word "*admin*":
 
 <img width="480" height="524" alt="pho4" src="https://github.com/user-attachments/assets/2cc67cf9-e390-4527-b666-6fc3474836ef" />
 
-An author of this article wrote a poem about the Administrator. If we take a look and google it, we'll find out that it's a Nursery Rhyme called "Solomon Grundy". Made originally by no other but James Orchard Halliwell - the same person that supposedly wrote the article on this website. 
+An author of this article wrote a poem about **the Administrator**. If we google it, we'll find out that it's a *Nursery Rhyme* called "*[Solomon Grundy](https://en.wikipedia.org/wiki/Solomon_Grundy_(nursery_rhyme))*". Made originally by no other but *James Orchard Halliwell* - **the same person** that supposedly wrote the article on this website. 
 
-https://en.wikipedia.org/wiki/Solomon_Grundy_(nursery_rhyme)
+> So the Administrator must be Solomon Grundy! *Scooby Dooby Doo!*
 
-So the Administrator must be Solomon Grundy! Scooby Dooby Doo!
+**Answer 7**: `Solomon Grundy`
 
-Answer 7: `Solomon Grundy`
-
-Question 8: `Can we find the email address of the administrator?`
-Yet another question that we need to come up with ourselves. Go into the other article "We are hiring". Author Jane Doe is using work email JD@anthem.com. So for the Administrator, Solomon Grundy it must be `SG@anthem.com`
+**Question 8**: `Can we find the email address of the administrator?`<br>
+Yet another question that we need to come up with ourselves. Go into the other article "*We are hiring*". Author *Jane Doe* is using work email `JD@anthem.com`. So for the Administrator, Solomon Grundy, it must be `SG@anthem.com`
 
 Answer 8: `SG@anthem.com`
 
