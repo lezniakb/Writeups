@@ -252,5 +252,10 @@ Final flag: `THM{Y0U_4R3_1337}`
 
 
 ### Sources
-- 
+- [Nmap](https://www.kali.org/tools/nmap/)
+- [Dirsearch](https://www.kali.org/tools/dirsearch/)
+- [Umbraco CMS](https://umbraco.com/)
+- [Nursery Rhyme - Solomon Grundy](https://en.wikipedia.org/wiki/Solomon_Grundy_(nursery_rhyme))
+- [Access Control List - Wikipedia](https://pl.wikipedia.org/wiki/Access-control_list)
+- [icacls MS Tool](https://learn.microsoft.com/pl-pl/windows-server/administration/windows-commands/icacls)
 - [Run PowerShell as another user](https://blog.danskingdom.com/Run-PowerShell-as-another-user/)
