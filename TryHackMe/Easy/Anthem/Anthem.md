@@ -175,42 +175,46 @@ flag 4: `THM{AN0TH3R_M3TA}`
 
 ---
 
-### Final stage
-Remember we found 2 open ports? On port `80` was the web page. Port 3389 is known to be a RDP service (Remote Desktop Protocol). It means we can remotely access a user desktop. 
+### Final stage (Windows)
+Remember we found 2 open ports? On port `80` was the web page. Port `3389` is known to be a RDP service (Remote Desktop Protocol). It means we can remotely access user's desktop.
 
-We know the credentials by now. In this case, it turns out we don't use `@anthem.com`. The username is simply `SG`
+We know the credentials by now. This time we don't use `@anthem.com`. The username is simply `SG`
 
 Open up Remmina. Left click on a new connection button and enter:<br>
-Server: `TARGET_IP`<br>
-Username: `SG`<br>
-Password: `UmbracoIsTheBest!`<br>
-Domain: `anthem.com`
+*Server*: `TARGET_IP`<br>
+*Username*: `SG`<br>
+*Password*: `UmbracoIsTheBest!`<br>
+*Domain*: `anthem.com`
 
 Click connect, and the session should open. There's a note there!
 
-Question 1: `Let's figure out the username and password to log in to the box. (The box is not on a domain)`
-Answer 1: `No answer needed`
+**Question 1**: `Let's figure out the username and password to log in to the box. (The box is not on a domain)`
+**Answer 1**: `No answer needed`
 
 > But we know it's SG:UmbracoIsTheBest!
 
-Question 2: `Gain initial access to the machine, what is the contents of user.txt?`
-Answer 2: `THM{N00T_NO0T}`
+Your first flag sits at the desktop. It's Pingu! *Noot Noot!*
 
-Next flag is hidden. It's always worth it to open Explorer settings, go to `View` -> `Options` -> `View tab` and select `Show hidden files, folders and drives`. You can also deselect `Hide extensions for known file types` while we're at it. 
+**Question 2**: `Gain initial access to the machine, what is the contents of user.txt?`
+**Answer 2**: `THM{N00T_NO0T}`
+
+The next answer is hidden. When working with Windows Explorer, remember to open up settings, go to `View` -> `Options` -> `View tab` and select `Show hidden files, folders and drives`. You can also deselect `Hide extensions for known file types` while we're at it. 
 
 <img width="444" height="280" alt="pho5" src="https://github.com/user-attachments/assets/b1e4c393-cdc1-4fd9-854d-f9316e52687a" />
 
 > By the way, if the window is too small, select `Toggle dynamic resolution update` on the left side bar of settings in Remmina
 
-Dig deeper. Go to `C://`... What is that? A hidden `backup` folder? I wonder what's there.. A text file called `restore.txt`! But we don't have permissions to open it :(
+Dig deeper. Go to `C://` ...What is that? A hidden `backup` folder? I wonder what's there.. 
 
-Then, an idea came to my mind.. Look at the ACL table! 
+A text file called `restore.txt`! But we don't have permissions to open it :(
 
-> ACL it's an Access Control List, which can tell us who is the owner of a file, and what permissions do we have
+Then, an idea came to my mind.. Look at the ACL table!  
+
+> ACL means Access Control List, which can tell us who is the owner of a file, and what permissions do we have for it
 
 <img width="370" height="132" alt="pho6" src="https://github.com/user-attachments/assets/df42f6a5-7293-44cd-89bf-5e365c72a7e6" />
 
-SG is the owner! So we just need to add read permissions. We can do it since we're the owner.
+**SG is the owner!** So we just need to add read permissions. We are able to do so, since we're the owner of this file.
 
 <img width="681" height="332" alt="pho7" src="https://github.com/user-attachments/assets/42e076a8-348d-4f2d-b8ad-876c256ff809" />
 
@@ -218,8 +222,10 @@ SG is the owner! So we just need to add read permissions. We can do it since we'
 
 Nice! The admin password is there. 
 
-Question 3: `Can we spot the admin password?`
-Answer 3: `ChangeMeBaby1MoreTime`
+**Question 3**: `Can we spot the admin password?`
+**Answer 3**: `ChangeMeBaby1MoreTime`
+
+### Privilege Escalation
 
 Found a way to escalate my privileges. [This article](https://blog.danskingdom.com/Run-PowerShell-as-another-user/) helps. Basically we're going to save Administrator credentials in a powershell variable, then use it with `Enter-PSSession` command.
 
@@ -231,14 +237,15 @@ Now for the final part: `Enter-PSSession -ComputerName localhost -Credential $cr
 
 <img width="709" height="195" alt="pho9" src="https://github.com/user-attachments/assets/b2130e31-8f28-4f16-919c-45c636f8dfe8" />
 
-We should be at `.\Administrator\Documents` right now. Privilege escalated! 
+We should be at `.\Administrator\Documents` right now. **Privilege escalated!**
 
 > You could also create a new session in Remmina. I just decided to go with Powershell and true Windows privilege escalation!
 
-Go to `C:\Users\Administrator\Desktop`, root.txt is just sitting there.
+Go to `C:\Users\Administrator\Desktop`. root.txt is just sitting there.
 
 <img width="629" height="258" alt="pho10" src="https://github.com/user-attachments/assets/2cd867e0-7eab-49d5-a1d8-5b4757e45e8c" />
 
+There we go, the final answer to this challenge!
 Final flag: `THM{Y0U_4R3_1337}`
 
 ### Conclusion
