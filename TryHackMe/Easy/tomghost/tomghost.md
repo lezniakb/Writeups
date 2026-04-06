@@ -208,10 +208,12 @@ THM{Z1P_1S_FAKE}
 # 
 ```
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
-Finished! 
+
+### Conclusion
+Finished!<br>
 That concludes this challenge. Thanks for reading and see you in the next one!
 
-Sources:<br>
+### Sources
 https://www.exploit-db.com/exploits/49039<br>
 https://www.goanywhere.com/blog/what-is-a-pgp-file<br>
 https://superuser.com/questions/46461/decrypt-pgp-file-using-asc-key<br>
