@@ -157,11 +157,14 @@ Enjoy!!
 # 
 ```
 >In more difficult CTFs I would use `find` command. By default the flag is located directly in `/root` directory
+
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 Second flag found, root.txt: `63a9f0ea7bb98050796b649e85481845`
 
 Finished!
 
+### Conclusion
 This room taught us why allowing anonymous FTP login and using weak passwords is not a good idea. 
 
 The author mentioned, that there are two ways of breaking into the server. We haven't touched port 80 yet.. <br>We'll explore it in other writeup, see ya! :)
