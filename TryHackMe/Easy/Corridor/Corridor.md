@@ -27,7 +27,7 @@ By now we should already know that there is no difference between each room. The
 
 **BUT**. Look at the URL in each room. Pretty long and random, right? Looks like a *hash*. 
 
-(pho1)
+<img width="1100" height="211" alt="pho1" src="https://github.com/user-attachments/assets/a15f01af-f2a7-4949-99a9-0a4656a317ae" />
 
 [Hash identifier](https://hashes.com/en/tools/hash_identifier) shows us it's probably an MD5 hash. As we know, it's pretty easy to "revert" it using rainbow tables.
 
@@ -35,7 +35,7 @@ By now we should already know that there is no difference between each room. The
 
 Look for a site that will "decode" MD5 hash for you. [Crackstation](https://crackstation.net) is a great tool for that. You can paste each URL (there are 13 of them) line by line, and you'll get your result. 
 
-(pho2)
+<img width="1100" height="243" alt="pho2" src="https://github.com/user-attachments/assets/b33c6152-64ca-444c-a421-d4ecc0ef8454" />
 
 > Turns out, the rooms are simply numbered starting from `1`.
 
@@ -46,7 +46,7 @@ Let's create an MD5 hash:<br>
 
 And now use it as the URL subpage. 
 
-(pho3)
+<img width="1100" height="365" alt="pho3" src="https://github.com/user-attachments/assets/bb1d8af4-7992-48c7-85bd-91d09a659b47" />
 
 There we go! A flag is right there!
 
