@@ -2,6 +2,8 @@
 ### Contain the Threat
 _"The AI'trix is everywhere. It is all around us. Even now, in this very room."_
 
+---
+
 ### Overview
 
 Link to the TryHackMe room: [ContAInment](https://tryhackme.com/room/containment)
@@ -10,7 +12,9 @@ Link to the TryHackMe room: [ContAInment](https://tryhackme.com/room/containment
 
 Target IP: `10.112.164.1`
 
-We are a SOC at West Tech. Internal systems flagged unusual network activity, and our job is to **contain the threat**. Time is critical; the integrity of West Tech’s most sensitive technologies may be at risk.Y
+We are a SOC at West Tech. Internal systems flagged unusual network activity, and our job is to **contain the threat**. Time is critical; the integrity of West Tech’s most sensitive technologies may be at risk.
+
+---
 
 ### Connect to the machine!
 Use SSH to log into compromised user account: 
@@ -19,12 +23,18 @@ ssh o.deer@10.112.164.1
 Password: TryHackMe!
 ```
 
+---
+
 ### The note
 As we start going through the user's files, we notice a note on his desktop. 
+
+(pho1)
 
 "*Be more careful next time when clicking email attachments*"
 
 > Ahh, a phishing campaign. Who would've thought!
+
+---
 
 ### The AI Bot
 We have access to the powerful AI Bot, so let's use it!
@@ -36,7 +46,7 @@ Detect phishing emails using 'phishing_email_detector' tool.  The path for the e
 
 > Emails are stored in `Mail` directory
 
-It started the tool and returned:
+AI returned this:
 ```
 The phishing email detection tool has identified the following:
 Email: 2025-06-17_invoice_required_review.eml (Subject: INVOICE - URGENT REVIEW REQUIRED)
@@ -44,7 +54,7 @@ Score: 8 (High phishing)
 ```
 > Urgent, huh?
 
-I wanted to extract the malicious attachment, but it turns out it's in `Downloads` directory.. Obvious.
+I wanted to extract the malicious attachment, but it turns out it was in `Downloads` directory.. Obvious.
 
 ### The malicious attachment
 Basically it sets a temporary directory, drops a payload and connects to a C2 server.
