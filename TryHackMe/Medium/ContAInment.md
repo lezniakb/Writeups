@@ -28,7 +28,7 @@ Password: TryHackMe!
 ### The note
 As we start going through the user's files, we notice a note on his desktop. 
 
-(pho1)
+<img width="900" height="188" alt="image" src="../../Assets/ContAInment/pho1.png" />
 
 "*Be more careful next time when clicking email attachments*"
 
