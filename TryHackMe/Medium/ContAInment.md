@@ -16,11 +16,9 @@ We are a SOC at West Tech. Internal systems flagged unusual network activity, an
 ---
 
 ### Connect to the machine!
-Use `SSH` to log into the compromised user account: 
-```
-ssh o.deer@10.112.164.1
-Password: TryHackMe!
-```
+
+Use `SSH` to log into the compromised user account: `ssh o.deer@10.112.164.1`<br>
+Use account's password given in the task.
 
 ---
 
@@ -143,8 +141,6 @@ Turns out that the attacker extracted employee data from the company's AI.<br>
 There's a password inside his notes.
 
 > Yes, there is! Look closely!
-
-Password: `westtechvictim1`
 
 `(Dont lose this lol or Ill have no leverage)`
 
