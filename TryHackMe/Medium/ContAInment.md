@@ -1,29 +1,40 @@
 # ContAInment
+### Contain the Threat
+_"The AI'trix is everywhere. It is all around us. Even now, in this very room."_
 
-https://tryhackme.com/room/containment
+### Overview
 
-### Information
+Link to the TryHackMe room: [ContAInment](https://tryhackme.com/room/containment)
 
-here write about the scenario (we are an employee of West Tech)
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
+Target IP: `10.112.164.1`
+
+We are a SOC at West Tech. Internal systems flagged unusual network activity, and our job is to **contain the threat**. Time is critical; the integrity of West Tech’s most sensitive technologies may be at risk.Y
 
 ### Connect to the machine!
-
-
+Use SSH to log into compromised user account: 
+```
 ssh o.deer@10.112.164.1
 Password: TryHackMe!
+```
 
 ### The note
-on desktop there's a note.
+As we start going through the user's files, we notice a note on his desktop. 
 
-It says that "it has a big mouth" and there's a "memory leak" present. 
+"*Be more careful next time when clicking email attachments*"
 
-"Be more careful next time when clicking email attachments"
-"You left a password in one of those files I encrypted, can you remember which one"
+> Ahh, a phishing campaign. Who would've thought!
 
 ### The AI Bot
-We have the AI Bot, so use it!
+We have access to the powerful AI Bot, so let's use it!
 
-`Detect phishing emails using 'phishing_email_detector' tool.  The path for the emails is: /home/o.deer/Mail`
+My prompt:
+```
+Detect phishing emails using 'phishing_email_detector' tool.  The path for the emails is: /home/o.deer/Mail
+```
+
+> Emails are stored in `Mail` directory
 
 It started the tool and returned:
 ```
