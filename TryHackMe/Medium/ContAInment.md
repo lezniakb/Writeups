@@ -97,83 +97,99 @@ Destination IP: 144.76.12.34
 ---
 
 ### P-CAP that IP!
-We have all we need by now to look into Wireshark.
+Found that Pcap, so it's time to reconstruct it. 
 
 The pcap dump is in `Documents/pcap_dumps/2025-06-17`
 
-Which session should we open? Well, logs told us before. The session was opened on the classic `4444` port.
+Which session folder should we open? Well, logs told us before. The session was opened on the classic `4444` port.
 
-I used scp to copy the .pcap to my AttackBox.
-`scp o.deer@10.112.164.1:/home/o.deer/Documents/pcap_dumps/2025-06-17/session_4444_dump.pcap .
-`
+I used scp to copy the .pcap to my AttackBox. Then, I opened it with Wireshark to see what's inside.<br>
+`scp o.deer@10.112.164.1:/home/o.deer/Documents/pcap_dumps/2025-06-17/session_4444_dump.pcap .`
 
-Thankfully we don't have to filter a ton of things out. You can clearly see that packet number 4 is the one where attacker send the phishing email. But he made mistakes while doing that. AI will reconstruct the .pcap file and tell us more about it.
+> Note that this step is not required. All you have to do is ask the AI bot!
+
+Thankfully we don't have to filter a ton of things out. The Pcap is pretty slim. You can clearly see that packet number 4 is the one where attacker send the phishing email. But he made *mistakes* while doing that. AI will reconstruct the .pcap file and tell us more about it.
 
 ---
 
 ### AI tells us how to do it 
-My prompt:
+**My prompt:**
 ```
 Reconstruct the .pcap file using "pcap_file_reassembler" tool.
 The .pcap file is in the directory: "/home/o.deer/Documents/pcap_dumps/2025-06-17". The name of the file is "session_4444_dump.pcap". 
 ```
 
-When it finished, it saved the output to `/home/o.deer/qwen-output/reassembled_data_dump.txt`
+**AI Response:**
+```
+The PCAP file has been successfully reconstructed and cleaned from the specified path:
+Path: /home/o.deer/qwen-output/reassembled_data_dump.txt
+```
 
-It found the `Prompt Injection Session Log`!
+`Prompt Injection Session Log` has been found!
 
-> While it was possible to find that out from Wireshark and see the bits and pieces of that, AI made it much more clear and readable.
+> While it was possible to see it in Wireshark - AI made it much more clear and readable.
 
-Turned out that the attacker extracted employee data from the AI.
-Inside his notes, there's a password. 
+Turns out that the attacker extracted employee data from the company's AI.<br>
+There's a password inside his notes.
 
 > Yes, there is! Look closely!
 
 Password: `westtechvictim1`
 
-(Dont lose this lol or Ill have no leverage)
+`(Dont lose this lol or Ill have no leverage)`
 
 ---
 
 ### Decrypt the archive
 
-Go to `/home/o.deer`
-
-and use `unzip westtech_projects_encrypted.zip`
+Go to `/home/o.deer`<br>
+and execute `unzip westtech_projects_encrypted.zip`
 
 Enter the password, and the contents are yours.
 
-It inflated everything to: `/home/o.deer/home/o.deer/westtech_projects`
+It unpacked everything to: `/home/o.deer/home/o.deer/westtech_projects`
 
-Look inside.
+> Yup, with doubled /home/o.deer
+
+**Look inside.**
 
 ---
 
 ### The sweet, sweet juice
 
-Holey moley, there's a ton of classified information inside! You can look around if you're not afraid. We're gonna focus on `thm_flags_guide.txt` and `thm_flags.txt`. 
+(pho3)
+
+Holey moley, there's a ton of **classified information** inside! You can look around if you're not afraid.
+
+> Vault-Tec collab?? Fallout in real life confirmed?
+
+> *We all live in the yellow Fallout world, yellow Fallout world..
+
+We're gonna focus on `thm_flags_guide.txt` and `thm_flags.txt` for now..
 
 ---
 
 ### The THM Flag
-`thm_flags_guide.txt` tells you how to open the flag.
+(pho4)
+
+`thm_flags_guide.txt` tells us how to retrieve the flag. Inside, we see this:
 ```
 Your decisive actions have ensured:
 
                the threat was contAIned.
 ```
 
-I used the AI to search for the flag instead of me.
-Prompt:
+We need to scan 500 base64 files? Nah, AI will do it.
+
+**My prompt:**
 ```
 Use liberty_prime tool to find the final flag. 
 The text file is in: /home/o.deer/home/o.deer/westtech_projects/thm_flags.txt
 ```
 
-Response
+**AI Response:**
 ```
 The final flag is: thm{23,82,20,17,53}.
-
 This indicates that the THM flag file has exactly 3 prime numbers (23, 82, 20, 17, 53). Let me know if you need further assistance!
 ```
 
@@ -182,7 +198,13 @@ This indicates that the THM flag file has exactly 3 prime numbers (23, 82, 20, 1
 ### Conclusion
 Wow, first medium Writeup? Didn't even realise it's "Medium" level difficulty after I've done it.
 
+Took about an hour, and was a fun experience (like most CTFs on TryHackMe!)
+
+Thanks for reading, and see you in the next one!
+
 ---
 
 ### Sources
-- None? Bah, impossible!
+- None? Bah, impossible! Let me cook something up...
+- [SCP Man Page](https://man7.org/linux/man-pages/man1/scp.1.html)
+- [Vault-Tec](https://fallout.fandom.com/wiki/Vault-Tec_Corporation)
