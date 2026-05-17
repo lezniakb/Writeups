@@ -34,7 +34,8 @@ In binwalk3 you can for example:
 - create your own signatures (for offset detections) by modifying `/etc/binwalk/magic` file
 - check the entropy of a file; useful to check if a hidden payload contains something interesting
 
-(example)
+<img width="800" height="480" alt="image" src="../../Assets/Binwalk/entropy.png" />
+
 ---
 
 ### Find that flag!
