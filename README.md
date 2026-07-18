@@ -19,7 +19,7 @@ Note 2: I **do not** use AI for my writeups. Please respect that rule when you i
 
 © 2026 Bartosz Łężniak
 
-Code: The scripts and source code in this repository are licensed under the MIT License. See the LICENSE file for details.<br>
+Code: The scripts and source code in this repository are licensed under the [MIT License](https://github.com/lezniakb/Writeups/blob/main/LICENSE).<br>
 Writeups: The text, explanations, and screenshots are licensed under [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt) (CC BY-SA 4.0).
 
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
