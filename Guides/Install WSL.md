@@ -1,4 +1,5 @@
 Install Kali Linux WSL on Windows 10/11
+
 WSL is Windows Subsystem for Linux. It allows you to use preferred distribution of Linux directly on your system, without the need for a virtual machine
 
 It will take about 20 GB (CHECK IT) from your C: drive
