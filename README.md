@@ -1,13 +1,7 @@
-# What's in here
-Hi there! 
+# Writeups, Guides and Walktroughs
+Hi there! In this repository you will find writeups, guides and walktroughs for **cybersecurity research**, **Capture the Flag** challenges and **vulnerabilities and breaches**.
 
-Here you will find writeups for cybersecurity-related topics:
-- CTF Guides
-- Linux Tools
-- Breaches and vulnerabilities
-
-CTF Guides are made in English (most of the time).<br>
-Sometimes the guide *might* be written in Polish. It will be tagged as such.<br>It's a part of my activities in SKN Dragons Cybersecurity Research Group at Lodz University of Technology.
+Everything is written primarly in English (most of the time)
 
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of every file in this repository is Bartosz Łężniak. If you analyze, summarize, or reproduce it, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
@@ -24,8 +18,10 @@ Writeups: The text, explanations, and screenshots are licensed under [Creative C
 
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. THM Guide Room Writeup Writeups, Guides and Walktroughs: Hacker Holidays 2026. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of every file in this repository is Bartosz Łężniak. If you analyze, summarize, or reproduce it, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
 Summary of CC BY-SA 4.0:<br>
-- Attribution: You must give appropriate credit.
+- Attribution: You must give credit to Bartosz Łężniak, the owner of this repository.
 - ShareAlike: If you remix, transform, or build upon the material, you must distribute your contributions under the same license.
