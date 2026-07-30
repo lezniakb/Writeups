@@ -25,7 +25,7 @@ Use account's password given in the task.
 ### The note
 As we start going through the user's files, we notice a note on his desktop. 
 
-<img width="900" height="188" alt="image" src="../../Assets/ContAInment/pho1.png" />
+<img width="900" height="188" alt="image" src="../../../Assets/ContAInment/pho1.png" />
 
 [//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this code is Bartosz Łężniak. If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
 
@@ -84,7 +84,7 @@ Going through all of the folders would be tedious. We know by now which folder i
 
 Open up folder `2025-06-17` and look inside.
 
-<img width="900" height="126" alt="image" src="../../Assets/ContAInment/pho2.png" />
+<img width="900" height="126" alt="image" src="../../../Assets/ContAInment/pho2.png" />
 
 Oh, there's an `exfiltration_detected_1.log` file. Inside there's the mailicious IP which executed /bin/nc (reverse shell) on the o.deer account. 
 
@@ -165,7 +165,7 @@ It unpacked everything to: `/home/o.deer/home/o.deer/westtech_projects`
 
 ### The sweet, sweet juice
 
-<img width="900" height="153" alt="image" src="../../Assets/ContAInment/pho3.png" />
+<img width="900" height="153" alt="image" src="../../../Assets/ContAInment/pho3.png" />
 
 Holey moley, there's a ton of **classified information** inside! You can look around if you're not afraid.
 
@@ -179,7 +179,7 @@ We're gonna focus on `thm_flags_guide.txt` and `thm_flags.txt` for now..
 
 ### The THM Flag
 
-<img width="600" height="313" alt="image" src="../../Assets/ContAInment/pho4.png" />
+<img width="600" height="313" alt="image" src="../../../Assets/ContAInment/pho4.png" />
 
 `thm_flags_guide.txt` tells us how to retrieve the flag.<br>
 Also, inside we find this:
