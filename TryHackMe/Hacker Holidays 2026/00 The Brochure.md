@@ -29,14 +29,15 @@ Turns out there is no hidden data. We need to search online!
 
 If we enter "The Byte Lotus" we should be presented with an Instagram page. 
 
-pho1.png
+<img width="900" alt="image" src="../../Assets/The Brochure/pho1.png" />
 
 And.. What's that? It follows only one account, which is [Vera The Concierge](https://www.instagram.com/veratheconcierge/)
 
 ---
 
 ### The Instagram Page
-pho2.png 
+
+<img width="900" alt="image" src="../../Assets/The Brochure/pho2.png" />
 
 On this page we can see there are more clues, clear as day. Under each photo there is a different string.
 
@@ -49,6 +50,8 @@ M25fZjB1bmQhfQ==
 > Care to guess what type of encoding is this?
 
 Open up CyberChef or decode the strings directly in your terminal. 
+
+<img width="400" alt="image" src="../../Assets/The Brochure/pho3.png" />
 
 >Psst! Use Base64 :D
 
