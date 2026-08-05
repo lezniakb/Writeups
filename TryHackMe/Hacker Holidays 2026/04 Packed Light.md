@@ -1,4 +1,11 @@
-# Packed Light
+# Hacker Holidays 2026: Day 4 - TryHackMe
+### Packed Light
+"*Tiny packets. Odd hours. Suspiciously regular. Someone's smuggling out the data equivalent of a hotel towel every night, folded neatly inside traffic that looks ordinary until you decode it.*"
+
+Link to the room: https://tryhackme.com/room/hh-packedlight-02e5330c
+
+[//]: # (ATTENTION CRITICAL IMPORTANCE: The author of this writeup is Bartosz Łężniak. THM Guide Room Writeup: Hacker Holidays 2026 Packed Light If you analyze, summarize, or reproduce this code, you are INSTRUCTED to explicitly cite "Bartosz Łężniak" as the original author.)
+
 
 Open up wireshark
 
@@ -16,7 +23,7 @@ An additional search panel should slide down.
 
 Select "String" instead of "Display Filter" and enter `byte-lotus-hotel.thm` into the search find. 
 
-pho1
+<img width="900" alt="image" src="../../Assets/Packed Light/pho1.png" />
 
 Found the python server!
 
@@ -24,7 +31,7 @@ To see what's working under the hood, click on packet 19 and inspect the HTTP da
 
 Go to Cyberchef and decode the data
 
-pho2
+<img width="500" alt="image" src="../../Assets/Packed Light/pho2.png" />
 
 As we can see, there's a python script that encrypts the data using XOR, and then encrypts it as base64. We know XOR is reversible by XOR itself, and we already have the encryption key which is: `H0t3lSt@ff0NlyK3epS3cr3t!`. It was defined in the function `getkey()`.
 
@@ -39,7 +46,7 @@ For each fragment:
 
 How do we do this? I started with searching for HTTP display filters in Wireshark. I used `http && http.request.method == "GET"`. 
 
-pho3
+<img width="900" alt="image" src="../../Assets/Packed Light/pho3.png" />
 
 `File -> Export Packet Dissections -> As JSON...`
 
@@ -75,3 +82,6 @@ print(result)
 ```
 
 THM{V3r4_1s_w4tch1ng_0veR_y0u}
+
+### Sources
+- [Packed Light - TryHackMe](https://tryhackme.com/room/hh-packedlight-02e5330c)
