@@ -1,29 +1,23 @@
-Install Kali Linux WSL on Windows 10/11
+# Install Linux WSL (Windows Subsystem for Linux) on Windows 10/11
+WSL is Windows Subsystem for Linux. It allows you to use preferred distribution of Linux directly on your system, without the need for a virtual machine.
 
-WSL is Windows Subsystem for Linux. It allows you to use preferred distribution of Linux directly on your system, without the need for a virtual machine
+Size: It will take about 20-27 GB from your C: drive.
 
-It will take about 20 GB (CHECK IT) from your C: drive
-
-turn windows features
-
-Open up PowerShell in **Administrator** mode.
-
-Update WSL version
+### Instruction
+1. Open up PowerShell in **Administrator** mode.
+2. Update WSL version
 ```
 wsl.exe --update
 ```
-
-Check which distro you want to Install
+3. Check which distro you want to Install
 ```
 wsl.exe --list --online
 ```
-
-We're gonna focus on installing Kali-Linux
+4. We're gonna focus on installing Kali-Linux
 ```
 wsl.exe --install kali-linux
 ```
-
-Enter your username, password, then retype your password
+5. Enter your username, password, then retype your password
 ```
 PS C:\Users\User\Downloads> wsl --install kali-linux
 Downloading: Kali Linux Rolling
@@ -35,31 +29,32 @@ New password:
 Retype new password:
 ```
 
-Alright, we've got access! Exit, then enter it again to verify it works
+Kali should now be installed!<br>
+Exit WSL, then enter it again to verify it works:
 ```
 wsl.exe -d Kali-Linux
+```
+
+Remember to update the `apt repository`
+```
+sudo apt update
 ```
 
 Oh, this is a minimal installation and we need to install supplementary tools
 ```
 sudo apt install -y kali-linux-default
 ```
+> It should take a while as you download about 10 GB of data. Thankfully this is being installed so fast because it's directly on your SSD (not on a virtual machine drive which is so slowwww)
 
-It should take a while, you download about 10 GB of data. Thankfully this is being installed so fast because it's directly on your SSD (not on a virtual machine drive which is slowwww)
-
-When prompted, select your keyboard configuration. I have selected `Other (at the bottom) -> Polish -> Polish`
-
-Configuring macchanger, I selected `Yes`
-
-Configuring kismet-capture-common, I selected `Yes` and added my username to kismet group
-
-Configuring wireshark, I selected `Yes`
-
-SSLH Configuration: `from inetd`
+### Additionals during update
+When prompted, select your keyboard configuration. I have selected `Other (at the bottom) -> Polish -> Polish`<br>
+Select given answers when prompted:
+- `macchanger`, I selected `Yes`,
+- `kismet-capture-common`, I selected `Yes` and added my username to kismet group
+- `wireshark`, I selected `Yes`
+- `SSLH` Configuration: `from inetd`
 
 Wait for the installation to complete.
-
-
 
 ### Additional packages
 ```
