@@ -45,6 +45,8 @@ pho3
 
 And that was all there was to it. The flag was included in the Response.
 
+Final flag: `THM{cl13nt_s1d3_ch3ckm4t3}`
+
 ---
 
 ### Funfact
