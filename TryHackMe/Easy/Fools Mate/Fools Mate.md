@@ -1,4 +1,4 @@
-# Fools Mate
+# Fools Mate - TryHackMe
 ### Can you bypass the engine?
 
 "*All I have to do is hit a button.*"
@@ -8,6 +8,8 @@ It's a quick, 15-min room. All you have to do is figure out how to evade the mal
 
 Attackbox IP: 10.114.76.55<br>
 Target Machine IP: 10.114.152.106
+
+Link to the TryHackMe room: [Fools Mate](https://tryhackme.com/room/foolsmate)<br>
 
 ---
 
@@ -19,7 +21,7 @@ Obviously I started with enumerating the machine. But Nmap and Gobuster yielded 
 ### Checkmate?
 You don't have to be a genius to see how you can checkmate your opponent in one move. But...
 
-pho1
+<img width="600" alt="image" src="../../../Assets/Fools Mate/pho1.png" />
 
 Holey Canoley! Cheater, Cheater! He just **WON'T** let us win!
 
@@ -33,13 +35,13 @@ So with this, I thought I should dig up JavaScript that is saved locally. Maybe 
 
 The JS code was saved and analyzed for the alert as well as for the API endpoints. 
 
-pho2
+<img width="600" alt="image" src="../../../Assets/Fools Mate/pho2.png" />
 
 Here I stood with these two choices. Create a direct request to API and see if that works, or play around with JS. 
 
 I went with the first choice, and returned to Burp Suite. Turns out you can make other moves on the checkboard, just not the one with which you win. First, I reset the board (and forwarded the request through Burp), then I selected A1 and moved it to A2. Burp intercepted this move. I sent it to `Repeater` in order to play with it. The only thing that had to be changed was the target in HTTP Request body.
 
-pho3
+<img width="600" alt="image" src="../../../Assets/Fools Mate/pho3.png" />
 
 `"to":"a2"` was changed to `"to":"a8"`
 
